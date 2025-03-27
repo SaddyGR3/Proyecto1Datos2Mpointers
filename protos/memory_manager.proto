@@ -10,58 +10,51 @@ service MemoryManager {
     rpc DecreaseRefCount(RefCountRequest) returns (RefCountResponse);
 }
 
+// Tipos básicos soportados
 enum DataType {
-    UNDEFINED = 0;  // Tipo por defecto para manejar errores
-    INT32 = 1;
-    FLOAT32 = 2;
-    FLOAT64 = 3;
-    CHAR = 4;
-    STRING = 5;
-    BOOL = 6;
+    INT = 0;     // int32 (4 bytes)
+    FLOAT = 1;   // float (4 bytes)
+    CHAR = 2;    // char (1 byte)
+    STRING = 3;  // string (variable)
 }
 
 message CreateRequest {
-    uint32 size = 1;
-    DataType type = 2;
-    bool initialize_with_zero = 3;  // Opcional: inicializar memoria con ceros
+    DataType type = 1;      // Tipo de dato a crear
+    uint32 size = 2;        // Tamaño necesario (especialmente importante para strings)
 }
 
 message CreateResponse {
-    int32 id = 1;
-    uint32 actual_size = 2;
-    DataType actual_type = 3;  // Confirmación del tipo creado
+    int32 id = 1;           // ID del bloque creado
+    DataType type = 2;      // Tipo confirmado del bloque
+    uint32 actual_size = 3; // Tamaño real asignado
 }
 
 message SetRequest {
-    int32 id = 1;
+    int32 id = 1;           // ID del bloque
+    DataType type = 2;      // Tipo de dato
     oneof value {
-        bytes raw_data = 2;    // Para tipos binarios (numéricos, char, bool)
-        string str_value = 3;  // Solo para strings
+        bytes binary_data = 3;  // Para INT, FLOAT, CHAR
+        string str_data = 4;    // Solo para STRING
     }
-    DataType data_type = 4;   // Tipo explícito para validación
 }
 
 message SetResponse {
     bool success = 1;
     string error_message = 2;
     uint32 bytes_written = 3;
-    DataType stored_type = 4; // Confirmación del tipo almacenado
 }
 
 message GetRequest {
-    int32 id = 1;
-    bool force_refresh = 2;
-    DataType expected_type = 3; // Tipo esperado para validación
+    int32 id = 1;           // ID del bloque
+    DataType expected_type = 2; // Tipo esperado (para validación)
 }
 
 message GetResponse {
+    DataType type = 1;      // Tipo real del dato
     oneof value {
-        bytes raw_data = 1;    // Datos binarios para tipos numéricos
-        string str_value = 2;  // Solo para strings
+        bytes binary_data = 2;  // Para INT, FLOAT, CHAR
+        string str_data = 3;    // Solo para STRING
     }
-    DataType type = 3;
-    bool is_null = 4;
-    uint32 data_size = 5;      // Tamaño real de los datos
 }
 
 message RefCountRequest {
@@ -69,8 +62,5 @@ message RefCountRequest {
 }
 
 message RefCountResponse {
-    bool success = 1;
-    string error_message = 2;
-    int32 ref_count = 3;
-    DataType block_type = 4;   // Tipo del bloque referenciado
+    int32 ref_count = 1;
 }

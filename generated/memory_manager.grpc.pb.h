@@ -28,7 +28,6 @@
 
 namespace memorymanager {
 
-// Servicio principal
 class MemoryManager final {
  public:
   static constexpr char const* service_full_name() {

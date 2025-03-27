@@ -3,7 +3,7 @@
 #include <string>
 #include <grpcpp/grpcpp.h>
 #include "generated/memory_manager.grpc.pb.h"
-#include "MemoryManagerProgram.cpp"
+#include "MemoryManagerProgram.cpp"  // Cambiado a .h
 
 using grpc::Server;
 using grpc::ServerBuilder;
@@ -19,106 +19,109 @@ using memorymanager::GetRequest;
 using memorymanager::GetResponse;
 using memorymanager::RefCountRequest;
 using memorymanager::RefCountResponse;
+using memorymanager::DataType;
 
 MemoryManagerProgram memManager(10);
+
+// Función auxiliar para convertir DataType a string
+std::string DataTypeToString(DataType type) {
+    switch(type) {
+        case DataType::INT: return "int";
+        case DataType::FLOAT: return "float";
+        case DataType::CHAR: return "char";
+        case DataType::STRING: return "string";
+        default: return "undefined";
+    }
+}
 
 class MemoryManagerServiceImpl final : public MemoryManager::Service {
 public:
     Status Create(ServerContext* context, const CreateRequest* request, CreateResponse* response) override {
-        std::cout << "[DEBUG] Inicio de Create - size: " << request->size()
-                  << ", type: " << request->type() << std::endl;
         try {
             std::string typeStr;
+            size_t size = 0;
 
-            // Mapear el enum del request al tipo correspondiente
             switch(request->type()) {
-                case CreateRequest::INT:
+                case DataType::INT:
                     typeStr = "int";
+                    size = sizeof(int32_t);
                     break;
-                case CreateRequest::FLOAT:
+                case DataType::FLOAT:
                     typeStr = "float";
+                    size = sizeof(float);
                     break;
-                case CreateRequest::DOUBLE:
-                    typeStr = "double";
-                    break;
-                case CreateRequest::CHAR:
+                case DataType::CHAR:
                     typeStr = "char";
+                    size = sizeof(char);
                     break;
-                case CreateRequest::STRING:
+                case DataType::STRING:
                     typeStr = "string";
+                    size = request->size() > 0 ? request->size() : 64; // Default 64 bytes para strings
                     break;
                 default:
-                    throw std::runtime_error("Tipo de dato no soportado");
+                    throw std::runtime_error("Tipo no soportado");
             }
 
-            int id = memManager.allocate(request->size(), typeStr);
-            if (id == -1) {
-                std::cerr << "[ERROR] Create - No se pudo asignar memoria" << std::endl;
-                return Status(grpc::StatusCode::INTERNAL, "No se pudo asignar memoria");
-            }
-
-            std::cout << "[DEBUG] Create - Memoria asignada con ID: " << id
-                      << " para tipo: " << typeStr << std::endl;
+            int id = memManager.allocate(size, typeStr);
             response->set_id(id);
+            response->set_type(request->type());
+            response->set_actual_size(size);
             return Status::OK;
         } catch (const std::exception& e) {
-            std::cerr << "[EXCEPTION] Create - " << e.what() << std::endl;
-            return Status(grpc::StatusCode::INTERNAL, e.what());
+            return Status(grpc::StatusCode::INVALID_ARGUMENT, e.what());
         }
     }
 
-    // Método Set mejorado
     Status Set(ServerContext* context, const SetRequest* request, SetResponse* response) override {
         try {
-            auto id = request->id();
-            std::string blockType = memManager.getBlockType(id);
-            size_t blockSize = memManager.getBlockSize(id);
+            std::string blockType = memManager.getBlockType(request->id());
 
-            // Validación básica
-            if (request->value().empty()) {
-                throw std::runtime_error("Empty value provided");
+            // Validar tipo
+            if ((request->type() == DataType::STRING && blockType != "string") ||
+                (request->type() != DataType::STRING && blockType == "string")) {
+                throw std::runtime_error("Type mismatch");
             }
 
-            // Manejo específico por tipo
-            if (blockType == "string") {
-                if (request->value().size() > blockSize) {
-                    throw std::runtime_error("String size exceeds block size");
+            if (request->value_case() == SetRequest::kBinaryData) {
+                // Manejar tipos binarios
+                const auto& data = request->binary_data();
+                size_t expected_size = 0;
+
+                switch(request->type()) {
+                    case DataType::INT:
+                        expected_size = sizeof(int32_t);
+                        if (data.size() != expected_size) throw std::runtime_error("Invalid int size");
+                        memManager.setValue<int32_t>(request->id(), *reinterpret_cast<const int32_t*>(data.data()));
+                        break;
+                    case DataType::FLOAT:
+                        expected_size = sizeof(float);
+                        if (data.size() != expected_size) throw std::runtime_error("Invalid float size");
+                        memManager.setValue<float>(request->id(), *reinterpret_cast<const float*>(data.data()));
+                        break;
+                    case DataType::CHAR:
+                        expected_size = sizeof(char);
+                        if (data.size() != expected_size) throw std::runtime_error("Invalid char size");
+                        memManager.setValue<char>(request->id(), data[0]);
+                        break;
+                    default:
+                        throw std::runtime_error("Invalid binary type");
                 }
-                memManager.setValue<std::string>(id, request->value());
+                response->set_bytes_written(expected_size);
             }
-            else if (blockType == "int") {
-                if (request->value().size() != sizeof(int)) {
-                    throw std::runtime_error("Invalid size for int");
+            else if (request->value_case() == SetRequest::kStrData) {
+                // Manejar strings
+                if (request->type() != DataType::STRING) {
+                    throw std::runtime_error("Expected string type");
                 }
-                int value;
-                memcpy(&value, request->value().data(), sizeof(int));
-                memManager.setValue<int>(id, value);
-            }
-            else if (blockType == "float") {
-                if (request->value().size() != sizeof(float)) {
-                    throw std::runtime_error("Invalid size for float");
+                const auto& str = request->str_data();
+                if (str.size() > memManager.getBlockSize(request->id())) {
+                    throw std::runtime_error("String too large");
                 }
-                float value;
-                memcpy(&value, request->value().data(), sizeof(float));
-                memManager.setValue<float>(id, value);
-            }
-            else if (blockType == "double") {
-                if (request->value().size() != sizeof(double)) {
-                    throw std::runtime_error("Invalid size for double");
-                }
-                double value;
-                memcpy(&value, request->value().data(), sizeof(double));
-                memManager.setValue<double>(id, value);
-            }
-            else if (blockType == "char") {
-                if (request->value().size() != sizeof(char)) {
-                    throw std::runtime_error("Invalid size for char");
-                }
-                char value = request->value()[0];
-                memManager.setValue<char>(id, value);
+                memManager.setValue<std::string>(request->id(), str);
+                response->set_bytes_written(str.size());
             }
             else {
-                throw std::runtime_error("Unsupported block type: " + blockType);
+                throw std::runtime_error("No data provided");
             }
 
             response->set_success(true);
@@ -130,81 +133,68 @@ public:
         }
     }
 
-    // Método Get mejorado
     Status Get(ServerContext* context, const GetRequest* request, GetResponse* response) override {
         try {
-            auto id = request->id();
-            std::string blockType = memManager.getBlockType(id);
-            void* blockAddr = memManager.getBlockAddress(id);
-            size_t blockSize = memManager.getBlockSize(id);
+            std::string blockType = memManager.getBlockType(request->id());
 
-            // Configurar el tipo en la respuesta
-            if (blockType == "int") response->set_type(GetResponse::INT);
-            else if (blockType == "float") response->set_type(GetResponse::FLOAT);
-            else if (blockType == "double") response->set_type(GetResponse::DOUBLE);
-            else if (blockType == "char") response->set_type(GetResponse::CHAR);
-            else if (blockType == "string") response->set_type(GetResponse::STRING);
-            else throw std::runtime_error("Unknown block type");
+            // Validar tipo esperado
+            if ((request->expected_type() == DataType::STRING && blockType != "string") ||
+                (request->expected_type() != DataType::STRING && blockType == "string")) {
+                throw std::runtime_error("Type mismatch");
+            }
 
-            // Manejo específico por tipo
+            response->set_type(request->expected_type());
+
             if (blockType == "string") {
-                std::string value(static_cast<char*>(blockAddr), blockSize);
-                response->set_value(value);
-            }
-            else if (blockType == "int") {
-                int value = memManager.getValue<int>(id);
-                response->set_value(std::string(reinterpret_cast<char*>(&value), sizeof(int)));
-            }
-            else if (blockType == "float") {
-                float value = memManager.getValue<float>(id);
-                response->set_value(std::string(reinterpret_cast<char*>(&value), sizeof(float)));
-            }
-            else if (blockType == "double") {
-                double value = memManager.getValue<double>(id);
-                response->set_value(std::string(reinterpret_cast<char*>(&value), sizeof(double)));
-            }
-            else if (blockType == "char") {
-                char value = memManager.getValue<char>(id);
-                response->set_value(std::string(1, value));
+                std::string value = memManager.getValue<std::string>(request->id());
+                response->set_str_data(value);
+            } else {
+                // Manejar tipos binarios
+                std::string binary_data;
+                binary_data.resize(blockType == "int" ? sizeof(int32_t) :
+                                 blockType == "float" ? sizeof(float) : sizeof(char));
+
+                if (blockType == "int") {
+                    int32_t value = memManager.getValue<int32_t>(request->id());
+                    memcpy(binary_data.data(), &value, sizeof(int32_t));
+                }
+                else if (blockType == "float") {
+                    float value = memManager.getValue<float>(request->id());
+                    memcpy(binary_data.data(), &value, sizeof(float));
+                }
+                else if (blockType == "char") {
+                    char value = memManager.getValue<char>(request->id());
+                    binary_data[0] = value;
+                }
+                response->set_binary_data(binary_data);
             }
 
             return Status::OK;
         } catch (const std::exception& e) {
-            return Status(grpc::StatusCode::INTERNAL, std::string("Error retrieving value: ") + e.what());
+            return Status(grpc::StatusCode::INTERNAL, e.what());
         }
     }
 
-
     Status IncreaseRefCount(ServerContext* context, const RefCountRequest* request, RefCountResponse* response) override {
-        std::cout << "[DEBUG] Inicio de IncreaseRefCount - id: " << request->id() << std::endl;
         try {
-            int newCount = memManager.increaseRefCount(request->id());
-            std::cout << "[DEBUG] IncreaseRefCount - Contador incrementado para id: "
-                      << request->id() << " (nuevo valor: " << newCount << ")" << std::endl;
-            response->set_success(true);
+            int id = request->id();
+            int newCount = memManager.increaseRefCount(id);
+
             response->set_ref_count(newCount);
             return Status::OK;
         } catch (const std::exception& e) {
-            std::cerr << "[EXCEPTION] IncreaseRefCount - " << e.what() << std::endl;
-            response->set_success(false);
-            response->set_error_message(e.what());
             return Status(grpc::StatusCode::INVALID_ARGUMENT, e.what());
         }
     }
 
     Status DecreaseRefCount(ServerContext* context, const RefCountRequest* request, RefCountResponse* response) override {
-        std::cout << "[DEBUG] Inicio de DecreaseRefCount - id: " << request->id() << std::endl;
         try {
-            int newCount = memManager.decreaseRefCount(request->id());
-            std::cout << "[DEBUG] DecreaseRefCount - Contador decrementado para id: "
-                      << request->id() << " (nuevo valor: " << newCount << ")" << std::endl;
-            response->set_success(true);
+            int id = request->id();
+            int newCount = memManager.decreaseRefCount(id);
+
             response->set_ref_count(newCount);
             return Status::OK;
         } catch (const std::exception& e) {
-            std::cerr << "[EXCEPTION] DecreaseRefCount - " << e.what() << std::endl;
-            response->set_success(false);
-            response->set_error_message(e.what());
             return Status(grpc::StatusCode::INVALID_ARGUMENT, e.what());
         }
     }

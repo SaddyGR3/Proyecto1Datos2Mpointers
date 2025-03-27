@@ -21,31 +21,22 @@ using memorymanager::GetRequest;
 using memorymanager::GetResponse;
 using memorymanager::RefCountRequest;
 using memorymanager::RefCountResponse;
+using memorymanager::DataType;
 
-enum class MPointerType {
-    INT,
-    FLOAT,
-    DOUBLE,
-    CHAR,
-    STRING,
-    UNKNOWN
+class MPointerBase {
+protected:
+    static std::shared_ptr<MemoryManager::Stub> stub_;  // Mover el stub a la clase base
+public:
+    static void Init(const std::string& server_address);  // Mover Init a la clase base
+    virtual ~MPointerBase() = default;
+    virtual int getId() const = 0;
 };
 
 template <typename T>
-MPointerType getMPointerType() {
-    if (std::is_same<T, int>::value) return MPointerType::INT;
-    if (std::is_same<T, float>::value) return MPointerType::FLOAT;
-    if (std::is_same<T, double>::value) return MPointerType::DOUBLE;
-    if (std::is_same<T, char>::value) return MPointerType::CHAR;
-    if (std::is_same<T, std::string>::value) return MPointerType::STRING;
-    return MPointerType::UNKNOWN;
-}
-
-template <typename T>
-class MPointer {
+class MPointer : public MPointerBase {
 private:
     int id_;
-    static std::shared_ptr<MemoryManager::Stub> stub_;
+    // Eliminar el stub_ de aquí, ahora está en la clase base
     mutable T cached_value_;
     mutable bool dirty_;
 
@@ -54,15 +45,29 @@ private:
     void increaseRefCount();
     void decreaseRefCount();
 
+    // Mapeo de tipos
+    static DataType getProtoType() {
+        if constexpr (std::is_same_v<T, int32_t>) return DataType::INT;
+        if constexpr (std::is_same_v<T, float>) return DataType::FLOAT;
+        if constexpr (std::is_same_v<T, char>) return DataType::CHAR;
+        if constexpr (std::is_same_v<T, std::string>) return DataType::STRING;
+        throw std::runtime_error("Unsupported type");
+    }
+
+    // Tamaño del tipo
+    static size_t getTypeSize() {
+        if constexpr (std::is_same_v<T, std::string>) return 64; // Tamaño por defecto para strings
+        return sizeof(T);
+    }
+
 public:
     static void Init(const std::string& server_address);
-    static MPointer<T> New();
+    static MPointer<T> New(size_t size = 0);
 
     MPointer() : id_(-1), cached_value_(), dirty_(false) {}
     explicit MPointer(int id);
     MPointer(const MPointer& other);
     MPointer(MPointer&& other) noexcept;
-
     ~MPointer();
 
     MPointer<T>& operator=(const MPointer<T>& other);
@@ -78,16 +83,13 @@ public:
     bool operator!=(std::nullptr_t) const { return id_ != -1; }
 
     explicit operator bool() const { return id_ != -1; }
-
-    int getId() const { return id_; }
+    int getId() const override { return id_; }
 };
 
 // Declaración de especializaciones
-
 template <>
 void MPointer<std::string>::fetchValue() const;
 template <>
 void MPointer<std::string>::storeValue() const;
-
 
 #endif // MPOINTERS_H

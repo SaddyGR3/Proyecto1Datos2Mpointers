@@ -1,53 +1,26 @@
 #include <iostream>
+#include <iomanip>
 #include "MPointers.h"
-
 
 int main() {
     try {
-        // 1. Inicialización
-        MPointer<int>::Init("localhost:50051");
+        // Inicialización UNA sola vez para todos los tipos
+        MPointerBase::Init("localhost:50051");
 
-        // 2. Crear un MPointer
-        MPointer<int> ptr = MPointer<int>::New();
-        std::cout << "MPointer creado exitosamente\n";
+        // Ahora funciona con cualquier tipo sin necesidad de Init específico
+        MPointer<float> fptr = MPointer<float>::New();
+        fptr = 55.44234f;
+        std::cout << "Float: " << std::setprecision(7) << *fptr << "\n";
 
-        // 3. Asignar valor - FORMA CORRECTA
-        ptr = 42;  // Usando el operador= sobrecargado
-        std::cout << "Valor 42 asignado correctamente\n";
+        MPointer<int> iptr = MPointer<int>::New();
+        iptr = 42;
+        std::cout << "Int: " << *iptr << "\n";
 
-        // 4. Leer valor - FORMA CORRECTA
-        int valor = *ptr;  // Usando el operador* sobrecargado
-        std::cout << "Valor recuperado: " << valor << "\n";
+        MPointer<char> cptr = MPointer<char>::New();
+        cptr = 'A';
+        std::cout << "Char: " << *cptr << "\n";
 
-
-        MPointer<int> ptr2 = MPointer<int>::New();
-        std::cout << "MPointer creado exitosamente\n";
-
-        // 3. Asignar valor - FORMA CORRECTA
-        ptr2 = 55 ;  // Usando el operador= sobrecargado
-        std::cout << "Valor 55 asignado correctamente\n";
-
-        // 4. Leer valor - FORMA CORRECTA
-        int valor2 = *ptr2;  // Usando el operador* sobrecargado
-        std::cout << "Valor recuperado: " << valor2 << "\n";
-
-        // 2. Crear un MPointer
-        MPointer<float> ptr3 = MPointer<float>::New();
-        std::cout << "MPointer creado exitosamente\n";
-
-        // 3. Asignar valor - FORMA CORRECTA
-        ptr2 = 55.44234 ;  // Usando el operador= sobrecargado
-        std::cout << "Valor 55 asignado correctamente\n";
-
-        // 4. Leer valor - FORMA CORRECTA
-        int valor3 = *ptr3;  // Usando el operador* sobrecargado
-        std::cout << "Valor recuperado: " << valor3 << "\n";
-
-        std::cout << "\n[DEBUG] Todas las pruebas completadas\n";
         return 0;
-
-
-
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
         return 1;

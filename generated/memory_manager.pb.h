@@ -84,41 +84,40 @@ namespace protobuf {
 }  // namespace google
 
 namespace memorymanager {
-enum CreateRequest_Type : int {
-  CreateRequest_Type_INT = 0,
-  CreateRequest_Type_FLOAT = 1,
-  CreateRequest_Type_DOUBLE = 2,
-  CreateRequest_Type_CHAR = 3,
-  CreateRequest_Type_STRING = 4,
-  CreateRequest_Type_CreateRequest_Type_INT_MIN_SENTINEL_DO_NOT_USE_ =
+enum DataType : int {
+  INT = 0,
+  FLOAT = 1,
+  CHAR = 2,
+  STRING = 3,
+  DataType_INT_MIN_SENTINEL_DO_NOT_USE_ =
       std::numeric_limits<::int32_t>::min(),
-  CreateRequest_Type_CreateRequest_Type_INT_MAX_SENTINEL_DO_NOT_USE_ =
+  DataType_INT_MAX_SENTINEL_DO_NOT_USE_ =
       std::numeric_limits<::int32_t>::max(),
 };
 
-bool CreateRequest_Type_IsValid(int value);
-extern const uint32_t CreateRequest_Type_internal_data_[];
-constexpr CreateRequest_Type CreateRequest_Type_Type_MIN = static_cast<CreateRequest_Type>(0);
-constexpr CreateRequest_Type CreateRequest_Type_Type_MAX = static_cast<CreateRequest_Type>(4);
-constexpr int CreateRequest_Type_Type_ARRAYSIZE = 4 + 1;
+bool DataType_IsValid(int value);
+extern const uint32_t DataType_internal_data_[];
+constexpr DataType DataType_MIN = static_cast<DataType>(0);
+constexpr DataType DataType_MAX = static_cast<DataType>(3);
+constexpr int DataType_ARRAYSIZE = 3 + 1;
 const ::google::protobuf::EnumDescriptor*
-CreateRequest_Type_descriptor();
+DataType_descriptor();
 template <typename T>
-const std::string& CreateRequest_Type_Name(T value) {
-  static_assert(std::is_same<T, CreateRequest_Type>::value ||
+const std::string& DataType_Name(T value) {
+  static_assert(std::is_same<T, DataType>::value ||
                     std::is_integral<T>::value,
-                "Incorrect type passed to Type_Name().");
-  return CreateRequest_Type_Name(static_cast<CreateRequest_Type>(value));
+                "Incorrect type passed to DataType_Name().");
+  return DataType_Name(static_cast<DataType>(value));
 }
 template <>
-inline const std::string& CreateRequest_Type_Name(CreateRequest_Type value) {
-  return ::google::protobuf::internal::NameOfDenseEnum<CreateRequest_Type_descriptor,
-                                                 0, 4>(
+inline const std::string& DataType_Name(DataType value) {
+  return ::google::protobuf::internal::NameOfDenseEnum<DataType_descriptor,
+                                                 0, 3>(
       static_cast<int>(value));
 }
-inline bool CreateRequest_Type_Parse(absl::string_view name, CreateRequest_Type* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<CreateRequest_Type>(
-      CreateRequest_Type_descriptor(), name, value);
+inline bool DataType_Parse(absl::string_view name, DataType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<DataType>(
+      DataType_descriptor(), name, value);
 }
 
 // ===================================================================
@@ -402,8 +401,8 @@ class SetRequest final : public ::google::protobuf::Message
     return *internal_default_instance();
   }
   enum ValueCase {
-    kRawData = 2,
-    kStrValue = 3,
+    kBinaryData = 3,
+    kStrData = 4,
     VALUE_NOT_SET = 0,
   };
   static inline const SetRequest* internal_default_instance() {
@@ -498,8 +497,9 @@ class SetRequest final : public ::google::protobuf::Message
   // accessors -------------------------------------------------------
   enum : int {
     kIdFieldNumber = 1,
-    kRawDataFieldNumber = 2,
-    kStrValueFieldNumber = 3,
+    kTypeFieldNumber = 2,
+    kBinaryDataFieldNumber = 3,
+    kStrDataFieldNumber = 4,
   };
   // int32 id = 1;
   void clear_id() ;
@@ -511,38 +511,48 @@ class SetRequest final : public ::google::protobuf::Message
   void _internal_set_id(::int32_t value);
 
   public:
-  // bytes raw_data = 2;
-  bool has_raw_data() const;
-  void clear_raw_data() ;
-  const std::string& raw_data() const;
-  template <typename Arg_ = const std::string&, typename... Args_>
-  void set_raw_data(Arg_&& arg, Args_... args);
-  std::string* mutable_raw_data();
-  PROTOBUF_NODISCARD std::string* release_raw_data();
-  void set_allocated_raw_data(std::string* value);
+  // .memorymanager.DataType type = 2;
+  void clear_type() ;
+  ::memorymanager::DataType type() const;
+  void set_type(::memorymanager::DataType value);
 
   private:
-  const std::string& _internal_raw_data() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_raw_data(
-      const std::string& value);
-  std::string* _internal_mutable_raw_data();
+  ::memorymanager::DataType _internal_type() const;
+  void _internal_set_type(::memorymanager::DataType value);
 
   public:
-  // string str_value = 3;
-  bool has_str_value() const;
-  void clear_str_value() ;
-  const std::string& str_value() const;
+  // bytes binary_data = 3;
+  bool has_binary_data() const;
+  void clear_binary_data() ;
+  const std::string& binary_data() const;
   template <typename Arg_ = const std::string&, typename... Args_>
-  void set_str_value(Arg_&& arg, Args_... args);
-  std::string* mutable_str_value();
-  PROTOBUF_NODISCARD std::string* release_str_value();
-  void set_allocated_str_value(std::string* value);
+  void set_binary_data(Arg_&& arg, Args_... args);
+  std::string* mutable_binary_data();
+  PROTOBUF_NODISCARD std::string* release_binary_data();
+  void set_allocated_binary_data(std::string* value);
 
   private:
-  const std::string& _internal_str_value() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_str_value(
+  const std::string& _internal_binary_data() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_binary_data(
       const std::string& value);
-  std::string* _internal_mutable_str_value();
+  std::string* _internal_mutable_binary_data();
+
+  public:
+  // string str_data = 4;
+  bool has_str_data() const;
+  void clear_str_data() ;
+  const std::string& str_data() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_str_data(Arg_&& arg, Args_... args);
+  std::string* mutable_str_data();
+  PROTOBUF_NODISCARD std::string* release_str_data();
+  void set_allocated_str_data(std::string* value);
+
+  private:
+  const std::string& _internal_str_data() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_str_data(
+      const std::string& value);
+  std::string* _internal_mutable_str_data();
 
   public:
   void clear_value();
@@ -550,14 +560,14 @@ class SetRequest final : public ::google::protobuf::Message
   // @@protoc_insertion_point(class_scope:memorymanager.SetRequest)
  private:
   class _Internal;
-  void set_has_raw_data();
-  void set_has_str_value();
+  void set_has_binary_data();
+  void set_has_str_data();
   inline bool has_value() const;
   inline void clear_has_value();
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      0, 3, 0,
-      42, 2>
+      1, 4, 0,
+      41, 2>
       _table_;
 
   friend class ::google::protobuf::MessageLite;
@@ -575,11 +585,12 @@ class SetRequest final : public ::google::protobuf::Message
                           ::google::protobuf::Arena* arena, const Impl_& from,
                           const SetRequest& from_msg);
     ::int32_t id_;
+    int type_;
     union ValueUnion {
       constexpr ValueUnion() : _constinit_{} {}
       ::google::protobuf::internal::ConstantInitialized _constinit_;
-      ::google::protobuf::internal::ArenaStringPtr raw_data_;
-      ::google::protobuf::internal::ArenaStringPtr str_value_;
+      ::google::protobuf::internal::ArenaStringPtr binary_data_;
+      ::google::protobuf::internal::ArenaStringPtr str_data_;
     } value_;
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::uint32_t _oneof_case_[1];
@@ -736,37 +747,9 @@ class RefCountResponse final : public ::google::protobuf::Message
 
   // accessors -------------------------------------------------------
   enum : int {
-    kErrorMessageFieldNumber = 2,
-    kSuccessFieldNumber = 1,
-    kRefCountFieldNumber = 3,
+    kRefCountFieldNumber = 1,
   };
-  // string error_message = 2;
-  void clear_error_message() ;
-  const std::string& error_message() const;
-  template <typename Arg_ = const std::string&, typename... Args_>
-  void set_error_message(Arg_&& arg, Args_... args);
-  std::string* mutable_error_message();
-  PROTOBUF_NODISCARD std::string* release_error_message();
-  void set_allocated_error_message(std::string* value);
-
-  private:
-  const std::string& _internal_error_message() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_error_message(
-      const std::string& value);
-  std::string* _internal_mutable_error_message();
-
-  public:
-  // bool success = 1;
-  void clear_success() ;
-  bool success() const;
-  void set_success(bool value);
-
-  private:
-  bool _internal_success() const;
-  void _internal_set_success(bool value);
-
-  public:
-  // int32 ref_count = 3;
+  // int32 ref_count = 1;
   void clear_ref_count() ;
   ::int32_t ref_count() const;
   void set_ref_count(::int32_t value);
@@ -781,8 +764,8 @@ class RefCountResponse final : public ::google::protobuf::Message
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      2, 3, 0,
-      52, 2>
+      0, 1, 0,
+      0, 2>
       _table_;
 
   friend class ::google::protobuf::MessageLite;
@@ -799,8 +782,6 @@ class RefCountResponse final : public ::google::protobuf::Message
     inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
                           ::google::protobuf::Arena* arena, const Impl_& from,
                           const RefCountResponse& from_msg);
-    ::google::protobuf::internal::ArenaStringPtr error_message_;
-    bool success_;
     ::int32_t ref_count_;
     ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
@@ -1056,8 +1037,8 @@ class GetResponse final : public ::google::protobuf::Message
     return *internal_default_instance();
   }
   enum ValueCase {
-    kRawData = 1,
-    kStrValue = 2,
+    kBinaryData = 2,
+    kStrData = 3,
     VALUE_NOT_SET = 0,
   };
   static inline const GetResponse* internal_default_instance() {
@@ -1151,69 +1132,52 @@ class GetResponse final : public ::google::protobuf::Message
 
   // accessors -------------------------------------------------------
   enum : int {
-    kErrorMessageFieldNumber = 4,
-    kIsNullFieldNumber = 3,
-    kRawDataFieldNumber = 1,
-    kStrValueFieldNumber = 2,
+    kTypeFieldNumber = 1,
+    kBinaryDataFieldNumber = 2,
+    kStrDataFieldNumber = 3,
   };
-  // string error_message = 4;
-  void clear_error_message() ;
-  const std::string& error_message() const;
-  template <typename Arg_ = const std::string&, typename... Args_>
-  void set_error_message(Arg_&& arg, Args_... args);
-  std::string* mutable_error_message();
-  PROTOBUF_NODISCARD std::string* release_error_message();
-  void set_allocated_error_message(std::string* value);
+  // .memorymanager.DataType type = 1;
+  void clear_type() ;
+  ::memorymanager::DataType type() const;
+  void set_type(::memorymanager::DataType value);
 
   private:
-  const std::string& _internal_error_message() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_error_message(
-      const std::string& value);
-  std::string* _internal_mutable_error_message();
+  ::memorymanager::DataType _internal_type() const;
+  void _internal_set_type(::memorymanager::DataType value);
 
   public:
-  // bool is_null = 3;
-  void clear_is_null() ;
-  bool is_null() const;
-  void set_is_null(bool value);
+  // bytes binary_data = 2;
+  bool has_binary_data() const;
+  void clear_binary_data() ;
+  const std::string& binary_data() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_binary_data(Arg_&& arg, Args_... args);
+  std::string* mutable_binary_data();
+  PROTOBUF_NODISCARD std::string* release_binary_data();
+  void set_allocated_binary_data(std::string* value);
 
   private:
-  bool _internal_is_null() const;
-  void _internal_set_is_null(bool value);
+  const std::string& _internal_binary_data() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_binary_data(
+      const std::string& value);
+  std::string* _internal_mutable_binary_data();
 
   public:
-  // bytes raw_data = 1;
-  bool has_raw_data() const;
-  void clear_raw_data() ;
-  const std::string& raw_data() const;
+  // string str_data = 3;
+  bool has_str_data() const;
+  void clear_str_data() ;
+  const std::string& str_data() const;
   template <typename Arg_ = const std::string&, typename... Args_>
-  void set_raw_data(Arg_&& arg, Args_... args);
-  std::string* mutable_raw_data();
-  PROTOBUF_NODISCARD std::string* release_raw_data();
-  void set_allocated_raw_data(std::string* value);
+  void set_str_data(Arg_&& arg, Args_... args);
+  std::string* mutable_str_data();
+  PROTOBUF_NODISCARD std::string* release_str_data();
+  void set_allocated_str_data(std::string* value);
 
   private:
-  const std::string& _internal_raw_data() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_raw_data(
+  const std::string& _internal_str_data() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_str_data(
       const std::string& value);
-  std::string* _internal_mutable_raw_data();
-
-  public:
-  // string str_value = 2;
-  bool has_str_value() const;
-  void clear_str_value() ;
-  const std::string& str_value() const;
-  template <typename Arg_ = const std::string&, typename... Args_>
-  void set_str_value(Arg_&& arg, Args_... args);
-  std::string* mutable_str_value();
-  PROTOBUF_NODISCARD std::string* release_str_value();
-  void set_allocated_str_value(std::string* value);
-
-  private:
-  const std::string& _internal_str_value() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_str_value(
-      const std::string& value);
-  std::string* _internal_mutable_str_value();
+  std::string* _internal_mutable_str_data();
 
   public:
   void clear_value();
@@ -1221,14 +1185,14 @@ class GetResponse final : public ::google::protobuf::Message
   // @@protoc_insertion_point(class_scope:memorymanager.GetResponse)
  private:
   class _Internal;
-  void set_has_raw_data();
-  void set_has_str_value();
+  void set_has_binary_data();
+  void set_has_str_data();
   inline bool has_value() const;
   inline void clear_has_value();
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      1, 4, 0,
-      56, 2>
+      0, 3, 0,
+      42, 2>
       _table_;
 
   friend class ::google::protobuf::MessageLite;
@@ -1245,13 +1209,12 @@ class GetResponse final : public ::google::protobuf::Message
     inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
                           ::google::protobuf::Arena* arena, const Impl_& from,
                           const GetResponse& from_msg);
-    ::google::protobuf::internal::ArenaStringPtr error_message_;
-    bool is_null_;
+    int type_;
     union ValueUnion {
       constexpr ValueUnion() : _constinit_{} {}
       ::google::protobuf::internal::ConstantInitialized _constinit_;
-      ::google::protobuf::internal::ArenaStringPtr raw_data_;
-      ::google::protobuf::internal::ArenaStringPtr str_value_;
+      ::google::protobuf::internal::ArenaStringPtr binary_data_;
+      ::google::protobuf::internal::ArenaStringPtr str_data_;
     } value_;
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::uint32_t _oneof_case_[1];
@@ -1409,7 +1372,7 @@ class GetRequest final : public ::google::protobuf::Message
   // accessors -------------------------------------------------------
   enum : int {
     kIdFieldNumber = 1,
-    kForceRefreshFieldNumber = 2,
+    kExpectedTypeFieldNumber = 2,
   };
   // int32 id = 1;
   void clear_id() ;
@@ -1421,14 +1384,14 @@ class GetRequest final : public ::google::protobuf::Message
   void _internal_set_id(::int32_t value);
 
   public:
-  // bool force_refresh = 2;
-  void clear_force_refresh() ;
-  bool force_refresh() const;
-  void set_force_refresh(bool value);
+  // .memorymanager.DataType expected_type = 2;
+  void clear_expected_type() ;
+  ::memorymanager::DataType expected_type() const;
+  void set_expected_type(::memorymanager::DataType value);
 
   private:
-  bool _internal_force_refresh() const;
-  void _internal_set_force_refresh(bool value);
+  ::memorymanager::DataType _internal_expected_type() const;
+  void _internal_set_expected_type(::memorymanager::DataType value);
 
   public:
   // @@protoc_insertion_point(class_scope:memorymanager.GetRequest)
@@ -1455,7 +1418,7 @@ class GetRequest final : public ::google::protobuf::Message
                           ::google::protobuf::Arena* arena, const Impl_& from,
                           const GetRequest& from_msg);
     ::int32_t id_;
-    bool force_refresh_;
+    int expected_type_;
     ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -1610,26 +1573,10 @@ class CreateResponse final : public ::google::protobuf::Message
 
   // accessors -------------------------------------------------------
   enum : int {
-    kErrorMessageFieldNumber = 3,
     kIdFieldNumber = 1,
-    kActualSizeFieldNumber = 2,
+    kTypeFieldNumber = 2,
+    kActualSizeFieldNumber = 3,
   };
-  // string error_message = 3;
-  void clear_error_message() ;
-  const std::string& error_message() const;
-  template <typename Arg_ = const std::string&, typename... Args_>
-  void set_error_message(Arg_&& arg, Args_... args);
-  std::string* mutable_error_message();
-  PROTOBUF_NODISCARD std::string* release_error_message();
-  void set_allocated_error_message(std::string* value);
-
-  private:
-  const std::string& _internal_error_message() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_error_message(
-      const std::string& value);
-  std::string* _internal_mutable_error_message();
-
-  public:
   // int32 id = 1;
   void clear_id() ;
   ::int32_t id() const;
@@ -1640,7 +1587,17 @@ class CreateResponse final : public ::google::protobuf::Message
   void _internal_set_id(::int32_t value);
 
   public:
-  // uint32 actual_size = 2;
+  // .memorymanager.DataType type = 2;
+  void clear_type() ;
+  ::memorymanager::DataType type() const;
+  void set_type(::memorymanager::DataType value);
+
+  private:
+  ::memorymanager::DataType _internal_type() const;
+  void _internal_set_type(::memorymanager::DataType value);
+
+  public:
+  // uint32 actual_size = 3;
   void clear_actual_size() ;
   ::uint32_t actual_size() const;
   void set_actual_size(::uint32_t value);
@@ -1656,7 +1613,7 @@ class CreateResponse final : public ::google::protobuf::Message
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
       2, 3, 0,
-      50, 2>
+      0, 2>
       _table_;
 
   friend class ::google::protobuf::MessageLite;
@@ -1673,8 +1630,8 @@ class CreateResponse final : public ::google::protobuf::Message
     inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
                           ::google::protobuf::Arena* arena, const Impl_& from,
                           const CreateResponse& from_msg);
-    ::google::protobuf::internal::ArenaStringPtr error_message_;
     ::int32_t id_;
+    int type_;
     ::uint32_t actual_size_;
     ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
@@ -1827,35 +1784,23 @@ class CreateRequest final : public ::google::protobuf::Message
  public:
   ::google::protobuf::Metadata GetMetadata() const;
   // nested types ----------------------------------------------------
-  using Type = CreateRequest_Type;
-  static constexpr Type INT = CreateRequest_Type_INT;
-  static constexpr Type FLOAT = CreateRequest_Type_FLOAT;
-  static constexpr Type DOUBLE = CreateRequest_Type_DOUBLE;
-  static constexpr Type CHAR = CreateRequest_Type_CHAR;
-  static constexpr Type STRING = CreateRequest_Type_STRING;
-  static inline bool Type_IsValid(int value) {
-    return CreateRequest_Type_IsValid(value);
-  }
-  static constexpr Type Type_MIN = CreateRequest_Type_Type_MIN;
-  static constexpr Type Type_MAX = CreateRequest_Type_Type_MAX;
-  static constexpr int Type_ARRAYSIZE = CreateRequest_Type_Type_ARRAYSIZE;
-  static inline const ::google::protobuf::EnumDescriptor* Type_descriptor() {
-    return CreateRequest_Type_descriptor();
-  }
-  template <typename T>
-  static inline const std::string& Type_Name(T value) {
-    return CreateRequest_Type_Name(value);
-  }
-  static inline bool Type_Parse(absl::string_view name, Type* value) {
-    return CreateRequest_Type_Parse(name, value);
-  }
 
   // accessors -------------------------------------------------------
   enum : int {
-    kSizeFieldNumber = 1,
-    kTypeFieldNumber = 2,
+    kTypeFieldNumber = 1,
+    kSizeFieldNumber = 2,
   };
-  // uint32 size = 1;
+  // .memorymanager.DataType type = 1;
+  void clear_type() ;
+  ::memorymanager::DataType type() const;
+  void set_type(::memorymanager::DataType value);
+
+  private:
+  ::memorymanager::DataType _internal_type() const;
+  void _internal_set_type(::memorymanager::DataType value);
+
+  public:
+  // uint32 size = 2;
   void clear_size() ;
   ::uint32_t size() const;
   void set_size(::uint32_t value);
@@ -1863,16 +1808,6 @@ class CreateRequest final : public ::google::protobuf::Message
   private:
   ::uint32_t _internal_size() const;
   void _internal_set_size(::uint32_t value);
-
-  public:
-  // .memorymanager.CreateRequest.Type type = 2;
-  void clear_type() ;
-  ::memorymanager::CreateRequest_Type type() const;
-  void set_type(::memorymanager::CreateRequest_Type value);
-
-  private:
-  ::memorymanager::CreateRequest_Type _internal_type() const;
-  void _internal_set_type(::memorymanager::CreateRequest_Type value);
 
   public:
   // @@protoc_insertion_point(class_scope:memorymanager.CreateRequest)
@@ -1898,8 +1833,8 @@ class CreateRequest final : public ::google::protobuf::Message
     inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
                           ::google::protobuf::Arena* arena, const Impl_& from,
                           const CreateRequest& from_msg);
-    ::uint32_t size_;
     int type_;
+    ::uint32_t size_;
     ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -1923,7 +1858,29 @@ class CreateRequest final : public ::google::protobuf::Message
 
 // CreateRequest
 
-// uint32 size = 1;
+// .memorymanager.DataType type = 1;
+inline void CreateRequest::clear_type() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.type_ = 0;
+}
+inline ::memorymanager::DataType CreateRequest::type() const {
+  // @@protoc_insertion_point(field_get:memorymanager.CreateRequest.type)
+  return _internal_type();
+}
+inline void CreateRequest::set_type(::memorymanager::DataType value) {
+  _internal_set_type(value);
+  // @@protoc_insertion_point(field_set:memorymanager.CreateRequest.type)
+}
+inline ::memorymanager::DataType CreateRequest::_internal_type() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return static_cast<::memorymanager::DataType>(_impl_.type_);
+}
+inline void CreateRequest::_internal_set_type(::memorymanager::DataType value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.type_ = value;
+}
+
+// uint32 size = 2;
 inline void CreateRequest::clear_size() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.size_ = 0u;
@@ -1943,28 +1900,6 @@ inline ::uint32_t CreateRequest::_internal_size() const {
 inline void CreateRequest::_internal_set_size(::uint32_t value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.size_ = value;
-}
-
-// .memorymanager.CreateRequest.Type type = 2;
-inline void CreateRequest::clear_type() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.type_ = 0;
-}
-inline ::memorymanager::CreateRequest_Type CreateRequest::type() const {
-  // @@protoc_insertion_point(field_get:memorymanager.CreateRequest.type)
-  return _internal_type();
-}
-inline void CreateRequest::set_type(::memorymanager::CreateRequest_Type value) {
-  _internal_set_type(value);
-  // @@protoc_insertion_point(field_set:memorymanager.CreateRequest.type)
-}
-inline ::memorymanager::CreateRequest_Type CreateRequest::_internal_type() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  return static_cast<::memorymanager::CreateRequest_Type>(_impl_.type_);
-}
-inline void CreateRequest::_internal_set_type(::memorymanager::CreateRequest_Type value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.type_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -1993,7 +1928,29 @@ inline void CreateResponse::_internal_set_id(::int32_t value) {
   _impl_.id_ = value;
 }
 
-// uint32 actual_size = 2;
+// .memorymanager.DataType type = 2;
+inline void CreateResponse::clear_type() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.type_ = 0;
+}
+inline ::memorymanager::DataType CreateResponse::type() const {
+  // @@protoc_insertion_point(field_get:memorymanager.CreateResponse.type)
+  return _internal_type();
+}
+inline void CreateResponse::set_type(::memorymanager::DataType value) {
+  _internal_set_type(value);
+  // @@protoc_insertion_point(field_set:memorymanager.CreateResponse.type)
+}
+inline ::memorymanager::DataType CreateResponse::_internal_type() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return static_cast<::memorymanager::DataType>(_impl_.type_);
+}
+inline void CreateResponse::_internal_set_type(::memorymanager::DataType value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.type_ = value;
+}
+
+// uint32 actual_size = 3;
 inline void CreateResponse::clear_actual_size() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.actual_size_ = 0u;
@@ -2013,54 +1970,6 @@ inline ::uint32_t CreateResponse::_internal_actual_size() const {
 inline void CreateResponse::_internal_set_actual_size(::uint32_t value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.actual_size_ = value;
-}
-
-// string error_message = 3;
-inline void CreateResponse::clear_error_message() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.error_message_.ClearToEmpty();
-}
-inline const std::string& CreateResponse::error_message() const
-    ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:memorymanager.CreateResponse.error_message)
-  return _internal_error_message();
-}
-template <typename Arg_, typename... Args_>
-inline PROTOBUF_ALWAYS_INLINE void CreateResponse::set_error_message(Arg_&& arg,
-                                                     Args_... args) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.error_message_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
-  // @@protoc_insertion_point(field_set:memorymanager.CreateResponse.error_message)
-}
-inline std::string* CreateResponse::mutable_error_message() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  std::string* _s = _internal_mutable_error_message();
-  // @@protoc_insertion_point(field_mutable:memorymanager.CreateResponse.error_message)
-  return _s;
-}
-inline const std::string& CreateResponse::_internal_error_message() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.error_message_.Get();
-}
-inline void CreateResponse::_internal_set_error_message(const std::string& value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.error_message_.Set(value, GetArena());
-}
-inline std::string* CreateResponse::_internal_mutable_error_message() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  return _impl_.error_message_.Mutable( GetArena());
-}
-inline std::string* CreateResponse::release_error_message() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:memorymanager.CreateResponse.error_message)
-  return _impl_.error_message_.Release();
-}
-inline void CreateResponse::set_allocated_error_message(std::string* value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.error_message_.SetAllocated(value, GetArena());
-  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.error_message_.IsDefault()) {
-    _impl_.error_message_.Set("", GetArena());
-  }
-  // @@protoc_insertion_point(field_set_allocated:memorymanager.CreateResponse.error_message)
 }
 
 // -------------------------------------------------------------------
@@ -2089,174 +1998,196 @@ inline void SetRequest::_internal_set_id(::int32_t value) {
   _impl_.id_ = value;
 }
 
-// bytes raw_data = 2;
-inline bool SetRequest::has_raw_data() const {
-  return value_case() == kRawData;
-}
-inline void SetRequest::set_has_raw_data() {
-  _impl_._oneof_case_[0] = kRawData;
-}
-inline void SetRequest::clear_raw_data() {
+// .memorymanager.DataType type = 2;
+inline void SetRequest::clear_type() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (value_case() == kRawData) {
-    _impl_.value_.raw_data_.Destroy();
+  _impl_.type_ = 0;
+}
+inline ::memorymanager::DataType SetRequest::type() const {
+  // @@protoc_insertion_point(field_get:memorymanager.SetRequest.type)
+  return _internal_type();
+}
+inline void SetRequest::set_type(::memorymanager::DataType value) {
+  _internal_set_type(value);
+  // @@protoc_insertion_point(field_set:memorymanager.SetRequest.type)
+}
+inline ::memorymanager::DataType SetRequest::_internal_type() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return static_cast<::memorymanager::DataType>(_impl_.type_);
+}
+inline void SetRequest::_internal_set_type(::memorymanager::DataType value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.type_ = value;
+}
+
+// bytes binary_data = 3;
+inline bool SetRequest::has_binary_data() const {
+  return value_case() == kBinaryData;
+}
+inline void SetRequest::set_has_binary_data() {
+  _impl_._oneof_case_[0] = kBinaryData;
+}
+inline void SetRequest::clear_binary_data() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (value_case() == kBinaryData) {
+    _impl_.value_.binary_data_.Destroy();
     clear_has_value();
   }
 }
-inline const std::string& SetRequest::raw_data() const
+inline const std::string& SetRequest::binary_data() const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:memorymanager.SetRequest.raw_data)
-  return _internal_raw_data();
+  // @@protoc_insertion_point(field_get:memorymanager.SetRequest.binary_data)
+  return _internal_binary_data();
 }
 template <typename Arg_, typename... Args_>
-inline PROTOBUF_ALWAYS_INLINE void SetRequest::set_raw_data(Arg_&& arg,
+inline PROTOBUF_ALWAYS_INLINE void SetRequest::set_binary_data(Arg_&& arg,
                                                      Args_... args) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (value_case() != kRawData) {
+  if (value_case() != kBinaryData) {
     clear_value();
 
-    set_has_raw_data();
-    _impl_.value_.raw_data_.InitDefault();
+    set_has_binary_data();
+    _impl_.value_.binary_data_.InitDefault();
   }
-  _impl_.value_.raw_data_.SetBytes(static_cast<Arg_&&>(arg), args..., GetArena());
-  // @@protoc_insertion_point(field_set:memorymanager.SetRequest.raw_data)
+  _impl_.value_.binary_data_.SetBytes(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:memorymanager.SetRequest.binary_data)
 }
-inline std::string* SetRequest::mutable_raw_data() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  std::string* _s = _internal_mutable_raw_data();
-  // @@protoc_insertion_point(field_mutable:memorymanager.SetRequest.raw_data)
+inline std::string* SetRequest::mutable_binary_data() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_binary_data();
+  // @@protoc_insertion_point(field_mutable:memorymanager.SetRequest.binary_data)
   return _s;
 }
-inline const std::string& SetRequest::_internal_raw_data() const {
+inline const std::string& SetRequest::_internal_binary_data() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  if (value_case() != kRawData) {
+  if (value_case() != kBinaryData) {
     return ::google::protobuf::internal::GetEmptyStringAlreadyInited();
   }
-  return _impl_.value_.raw_data_.Get();
+  return _impl_.value_.binary_data_.Get();
 }
-inline void SetRequest::_internal_set_raw_data(const std::string& value) {
+inline void SetRequest::_internal_set_binary_data(const std::string& value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (value_case() != kRawData) {
+  if (value_case() != kBinaryData) {
     clear_value();
 
-    set_has_raw_data();
-    _impl_.value_.raw_data_.InitDefault();
+    set_has_binary_data();
+    _impl_.value_.binary_data_.InitDefault();
   }
-  _impl_.value_.raw_data_.Set(value, GetArena());
+  _impl_.value_.binary_data_.Set(value, GetArena());
 }
-inline std::string* SetRequest::_internal_mutable_raw_data() {
+inline std::string* SetRequest::_internal_mutable_binary_data() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (value_case() != kRawData) {
+  if (value_case() != kBinaryData) {
     clear_value();
 
-    set_has_raw_data();
-    _impl_.value_.raw_data_.InitDefault();
+    set_has_binary_data();
+    _impl_.value_.binary_data_.InitDefault();
   }
-  return _impl_.value_.raw_data_.Mutable( GetArena());
+  return _impl_.value_.binary_data_.Mutable( GetArena());
 }
-inline std::string* SetRequest::release_raw_data() {
+inline std::string* SetRequest::release_binary_data() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:memorymanager.SetRequest.raw_data)
-  if (value_case() != kRawData) {
+  // @@protoc_insertion_point(field_release:memorymanager.SetRequest.binary_data)
+  if (value_case() != kBinaryData) {
     return nullptr;
   }
   clear_has_value();
-  return _impl_.value_.raw_data_.Release();
+  return _impl_.value_.binary_data_.Release();
 }
-inline void SetRequest::set_allocated_raw_data(std::string* value) {
+inline void SetRequest::set_allocated_binary_data(std::string* value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (has_value()) {
     clear_value();
   }
   if (value != nullptr) {
-    set_has_raw_data();
-    _impl_.value_.raw_data_.InitAllocated(value, GetArena());
+    set_has_binary_data();
+    _impl_.value_.binary_data_.InitAllocated(value, GetArena());
   }
-  // @@protoc_insertion_point(field_set_allocated:memorymanager.SetRequest.raw_data)
+  // @@protoc_insertion_point(field_set_allocated:memorymanager.SetRequest.binary_data)
 }
 
-// string str_value = 3;
-inline bool SetRequest::has_str_value() const {
-  return value_case() == kStrValue;
+// string str_data = 4;
+inline bool SetRequest::has_str_data() const {
+  return value_case() == kStrData;
 }
-inline void SetRequest::set_has_str_value() {
-  _impl_._oneof_case_[0] = kStrValue;
+inline void SetRequest::set_has_str_data() {
+  _impl_._oneof_case_[0] = kStrData;
 }
-inline void SetRequest::clear_str_value() {
+inline void SetRequest::clear_str_data() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (value_case() == kStrValue) {
-    _impl_.value_.str_value_.Destroy();
+  if (value_case() == kStrData) {
+    _impl_.value_.str_data_.Destroy();
     clear_has_value();
   }
 }
-inline const std::string& SetRequest::str_value() const
+inline const std::string& SetRequest::str_data() const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:memorymanager.SetRequest.str_value)
-  return _internal_str_value();
+  // @@protoc_insertion_point(field_get:memorymanager.SetRequest.str_data)
+  return _internal_str_data();
 }
 template <typename Arg_, typename... Args_>
-inline PROTOBUF_ALWAYS_INLINE void SetRequest::set_str_value(Arg_&& arg,
+inline PROTOBUF_ALWAYS_INLINE void SetRequest::set_str_data(Arg_&& arg,
                                                      Args_... args) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (value_case() != kStrValue) {
+  if (value_case() != kStrData) {
     clear_value();
 
-    set_has_str_value();
-    _impl_.value_.str_value_.InitDefault();
+    set_has_str_data();
+    _impl_.value_.str_data_.InitDefault();
   }
-  _impl_.value_.str_value_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
-  // @@protoc_insertion_point(field_set:memorymanager.SetRequest.str_value)
+  _impl_.value_.str_data_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:memorymanager.SetRequest.str_data)
 }
-inline std::string* SetRequest::mutable_str_value() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  std::string* _s = _internal_mutable_str_value();
-  // @@protoc_insertion_point(field_mutable:memorymanager.SetRequest.str_value)
+inline std::string* SetRequest::mutable_str_data() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_str_data();
+  // @@protoc_insertion_point(field_mutable:memorymanager.SetRequest.str_data)
   return _s;
 }
-inline const std::string& SetRequest::_internal_str_value() const {
+inline const std::string& SetRequest::_internal_str_data() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  if (value_case() != kStrValue) {
+  if (value_case() != kStrData) {
     return ::google::protobuf::internal::GetEmptyStringAlreadyInited();
   }
-  return _impl_.value_.str_value_.Get();
+  return _impl_.value_.str_data_.Get();
 }
-inline void SetRequest::_internal_set_str_value(const std::string& value) {
+inline void SetRequest::_internal_set_str_data(const std::string& value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (value_case() != kStrValue) {
+  if (value_case() != kStrData) {
     clear_value();
 
-    set_has_str_value();
-    _impl_.value_.str_value_.InitDefault();
+    set_has_str_data();
+    _impl_.value_.str_data_.InitDefault();
   }
-  _impl_.value_.str_value_.Set(value, GetArena());
+  _impl_.value_.str_data_.Set(value, GetArena());
 }
-inline std::string* SetRequest::_internal_mutable_str_value() {
+inline std::string* SetRequest::_internal_mutable_str_data() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (value_case() != kStrValue) {
+  if (value_case() != kStrData) {
     clear_value();
 
-    set_has_str_value();
-    _impl_.value_.str_value_.InitDefault();
+    set_has_str_data();
+    _impl_.value_.str_data_.InitDefault();
   }
-  return _impl_.value_.str_value_.Mutable( GetArena());
+  return _impl_.value_.str_data_.Mutable( GetArena());
 }
-inline std::string* SetRequest::release_str_value() {
+inline std::string* SetRequest::release_str_data() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:memorymanager.SetRequest.str_value)
-  if (value_case() != kStrValue) {
+  // @@protoc_insertion_point(field_release:memorymanager.SetRequest.str_data)
+  if (value_case() != kStrData) {
     return nullptr;
   }
   clear_has_value();
-  return _impl_.value_.str_value_.Release();
+  return _impl_.value_.str_data_.Release();
 }
-inline void SetRequest::set_allocated_str_value(std::string* value) {
+inline void SetRequest::set_allocated_str_data(std::string* value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (has_value()) {
     clear_value();
   }
   if (value != nullptr) {
-    set_has_str_value();
-    _impl_.value_.str_value_.InitAllocated(value, GetArena());
+    set_has_str_data();
+    _impl_.value_.str_data_.InitAllocated(value, GetArena());
   }
-  // @@protoc_insertion_point(field_set_allocated:memorymanager.SetRequest.str_value)
+  // @@protoc_insertion_point(field_set_allocated:memorymanager.SetRequest.str_data)
 }
 
 inline bool SetRequest::has_value() const {
@@ -2390,270 +2321,222 @@ inline void GetRequest::_internal_set_id(::int32_t value) {
   _impl_.id_ = value;
 }
 
-// bool force_refresh = 2;
-inline void GetRequest::clear_force_refresh() {
+// .memorymanager.DataType expected_type = 2;
+inline void GetRequest::clear_expected_type() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.force_refresh_ = false;
+  _impl_.expected_type_ = 0;
 }
-inline bool GetRequest::force_refresh() const {
-  // @@protoc_insertion_point(field_get:memorymanager.GetRequest.force_refresh)
-  return _internal_force_refresh();
+inline ::memorymanager::DataType GetRequest::expected_type() const {
+  // @@protoc_insertion_point(field_get:memorymanager.GetRequest.expected_type)
+  return _internal_expected_type();
 }
-inline void GetRequest::set_force_refresh(bool value) {
-  _internal_set_force_refresh(value);
-  // @@protoc_insertion_point(field_set:memorymanager.GetRequest.force_refresh)
+inline void GetRequest::set_expected_type(::memorymanager::DataType value) {
+  _internal_set_expected_type(value);
+  // @@protoc_insertion_point(field_set:memorymanager.GetRequest.expected_type)
 }
-inline bool GetRequest::_internal_force_refresh() const {
+inline ::memorymanager::DataType GetRequest::_internal_expected_type() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.force_refresh_;
+  return static_cast<::memorymanager::DataType>(_impl_.expected_type_);
 }
-inline void GetRequest::_internal_set_force_refresh(bool value) {
+inline void GetRequest::_internal_set_expected_type(::memorymanager::DataType value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.force_refresh_ = value;
+  _impl_.expected_type_ = value;
 }
 
 // -------------------------------------------------------------------
 
 // GetResponse
 
-// bytes raw_data = 1;
-inline bool GetResponse::has_raw_data() const {
-  return value_case() == kRawData;
-}
-inline void GetResponse::set_has_raw_data() {
-  _impl_._oneof_case_[0] = kRawData;
-}
-inline void GetResponse::clear_raw_data() {
+// .memorymanager.DataType type = 1;
+inline void GetResponse::clear_type() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (value_case() == kRawData) {
-    _impl_.value_.raw_data_.Destroy();
+  _impl_.type_ = 0;
+}
+inline ::memorymanager::DataType GetResponse::type() const {
+  // @@protoc_insertion_point(field_get:memorymanager.GetResponse.type)
+  return _internal_type();
+}
+inline void GetResponse::set_type(::memorymanager::DataType value) {
+  _internal_set_type(value);
+  // @@protoc_insertion_point(field_set:memorymanager.GetResponse.type)
+}
+inline ::memorymanager::DataType GetResponse::_internal_type() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return static_cast<::memorymanager::DataType>(_impl_.type_);
+}
+inline void GetResponse::_internal_set_type(::memorymanager::DataType value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.type_ = value;
+}
+
+// bytes binary_data = 2;
+inline bool GetResponse::has_binary_data() const {
+  return value_case() == kBinaryData;
+}
+inline void GetResponse::set_has_binary_data() {
+  _impl_._oneof_case_[0] = kBinaryData;
+}
+inline void GetResponse::clear_binary_data() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (value_case() == kBinaryData) {
+    _impl_.value_.binary_data_.Destroy();
     clear_has_value();
   }
 }
-inline const std::string& GetResponse::raw_data() const
+inline const std::string& GetResponse::binary_data() const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:memorymanager.GetResponse.raw_data)
-  return _internal_raw_data();
+  // @@protoc_insertion_point(field_get:memorymanager.GetResponse.binary_data)
+  return _internal_binary_data();
 }
 template <typename Arg_, typename... Args_>
-inline PROTOBUF_ALWAYS_INLINE void GetResponse::set_raw_data(Arg_&& arg,
+inline PROTOBUF_ALWAYS_INLINE void GetResponse::set_binary_data(Arg_&& arg,
                                                      Args_... args) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (value_case() != kRawData) {
+  if (value_case() != kBinaryData) {
     clear_value();
 
-    set_has_raw_data();
-    _impl_.value_.raw_data_.InitDefault();
+    set_has_binary_data();
+    _impl_.value_.binary_data_.InitDefault();
   }
-  _impl_.value_.raw_data_.SetBytes(static_cast<Arg_&&>(arg), args..., GetArena());
-  // @@protoc_insertion_point(field_set:memorymanager.GetResponse.raw_data)
+  _impl_.value_.binary_data_.SetBytes(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:memorymanager.GetResponse.binary_data)
 }
-inline std::string* GetResponse::mutable_raw_data() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  std::string* _s = _internal_mutable_raw_data();
-  // @@protoc_insertion_point(field_mutable:memorymanager.GetResponse.raw_data)
+inline std::string* GetResponse::mutable_binary_data() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_binary_data();
+  // @@protoc_insertion_point(field_mutable:memorymanager.GetResponse.binary_data)
   return _s;
 }
-inline const std::string& GetResponse::_internal_raw_data() const {
+inline const std::string& GetResponse::_internal_binary_data() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  if (value_case() != kRawData) {
+  if (value_case() != kBinaryData) {
     return ::google::protobuf::internal::GetEmptyStringAlreadyInited();
   }
-  return _impl_.value_.raw_data_.Get();
+  return _impl_.value_.binary_data_.Get();
 }
-inline void GetResponse::_internal_set_raw_data(const std::string& value) {
+inline void GetResponse::_internal_set_binary_data(const std::string& value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (value_case() != kRawData) {
+  if (value_case() != kBinaryData) {
     clear_value();
 
-    set_has_raw_data();
-    _impl_.value_.raw_data_.InitDefault();
+    set_has_binary_data();
+    _impl_.value_.binary_data_.InitDefault();
   }
-  _impl_.value_.raw_data_.Set(value, GetArena());
+  _impl_.value_.binary_data_.Set(value, GetArena());
 }
-inline std::string* GetResponse::_internal_mutable_raw_data() {
+inline std::string* GetResponse::_internal_mutable_binary_data() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (value_case() != kRawData) {
+  if (value_case() != kBinaryData) {
     clear_value();
 
-    set_has_raw_data();
-    _impl_.value_.raw_data_.InitDefault();
+    set_has_binary_data();
+    _impl_.value_.binary_data_.InitDefault();
   }
-  return _impl_.value_.raw_data_.Mutable( GetArena());
+  return _impl_.value_.binary_data_.Mutable( GetArena());
 }
-inline std::string* GetResponse::release_raw_data() {
+inline std::string* GetResponse::release_binary_data() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:memorymanager.GetResponse.raw_data)
-  if (value_case() != kRawData) {
+  // @@protoc_insertion_point(field_release:memorymanager.GetResponse.binary_data)
+  if (value_case() != kBinaryData) {
     return nullptr;
   }
   clear_has_value();
-  return _impl_.value_.raw_data_.Release();
+  return _impl_.value_.binary_data_.Release();
 }
-inline void GetResponse::set_allocated_raw_data(std::string* value) {
+inline void GetResponse::set_allocated_binary_data(std::string* value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (has_value()) {
     clear_value();
   }
   if (value != nullptr) {
-    set_has_raw_data();
-    _impl_.value_.raw_data_.InitAllocated(value, GetArena());
+    set_has_binary_data();
+    _impl_.value_.binary_data_.InitAllocated(value, GetArena());
   }
-  // @@protoc_insertion_point(field_set_allocated:memorymanager.GetResponse.raw_data)
+  // @@protoc_insertion_point(field_set_allocated:memorymanager.GetResponse.binary_data)
 }
 
-// string str_value = 2;
-inline bool GetResponse::has_str_value() const {
-  return value_case() == kStrValue;
+// string str_data = 3;
+inline bool GetResponse::has_str_data() const {
+  return value_case() == kStrData;
 }
-inline void GetResponse::set_has_str_value() {
-  _impl_._oneof_case_[0] = kStrValue;
+inline void GetResponse::set_has_str_data() {
+  _impl_._oneof_case_[0] = kStrData;
 }
-inline void GetResponse::clear_str_value() {
+inline void GetResponse::clear_str_data() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (value_case() == kStrValue) {
-    _impl_.value_.str_value_.Destroy();
+  if (value_case() == kStrData) {
+    _impl_.value_.str_data_.Destroy();
     clear_has_value();
   }
 }
-inline const std::string& GetResponse::str_value() const
+inline const std::string& GetResponse::str_data() const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:memorymanager.GetResponse.str_value)
-  return _internal_str_value();
+  // @@protoc_insertion_point(field_get:memorymanager.GetResponse.str_data)
+  return _internal_str_data();
 }
 template <typename Arg_, typename... Args_>
-inline PROTOBUF_ALWAYS_INLINE void GetResponse::set_str_value(Arg_&& arg,
+inline PROTOBUF_ALWAYS_INLINE void GetResponse::set_str_data(Arg_&& arg,
                                                      Args_... args) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (value_case() != kStrValue) {
+  if (value_case() != kStrData) {
     clear_value();
 
-    set_has_str_value();
-    _impl_.value_.str_value_.InitDefault();
+    set_has_str_data();
+    _impl_.value_.str_data_.InitDefault();
   }
-  _impl_.value_.str_value_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
-  // @@protoc_insertion_point(field_set:memorymanager.GetResponse.str_value)
+  _impl_.value_.str_data_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:memorymanager.GetResponse.str_data)
 }
-inline std::string* GetResponse::mutable_str_value() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  std::string* _s = _internal_mutable_str_value();
-  // @@protoc_insertion_point(field_mutable:memorymanager.GetResponse.str_value)
+inline std::string* GetResponse::mutable_str_data() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_str_data();
+  // @@protoc_insertion_point(field_mutable:memorymanager.GetResponse.str_data)
   return _s;
 }
-inline const std::string& GetResponse::_internal_str_value() const {
+inline const std::string& GetResponse::_internal_str_data() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  if (value_case() != kStrValue) {
+  if (value_case() != kStrData) {
     return ::google::protobuf::internal::GetEmptyStringAlreadyInited();
   }
-  return _impl_.value_.str_value_.Get();
+  return _impl_.value_.str_data_.Get();
 }
-inline void GetResponse::_internal_set_str_value(const std::string& value) {
+inline void GetResponse::_internal_set_str_data(const std::string& value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (value_case() != kStrValue) {
+  if (value_case() != kStrData) {
     clear_value();
 
-    set_has_str_value();
-    _impl_.value_.str_value_.InitDefault();
+    set_has_str_data();
+    _impl_.value_.str_data_.InitDefault();
   }
-  _impl_.value_.str_value_.Set(value, GetArena());
+  _impl_.value_.str_data_.Set(value, GetArena());
 }
-inline std::string* GetResponse::_internal_mutable_str_value() {
+inline std::string* GetResponse::_internal_mutable_str_data() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (value_case() != kStrValue) {
+  if (value_case() != kStrData) {
     clear_value();
 
-    set_has_str_value();
-    _impl_.value_.str_value_.InitDefault();
+    set_has_str_data();
+    _impl_.value_.str_data_.InitDefault();
   }
-  return _impl_.value_.str_value_.Mutable( GetArena());
+  return _impl_.value_.str_data_.Mutable( GetArena());
 }
-inline std::string* GetResponse::release_str_value() {
+inline std::string* GetResponse::release_str_data() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:memorymanager.GetResponse.str_value)
-  if (value_case() != kStrValue) {
+  // @@protoc_insertion_point(field_release:memorymanager.GetResponse.str_data)
+  if (value_case() != kStrData) {
     return nullptr;
   }
   clear_has_value();
-  return _impl_.value_.str_value_.Release();
+  return _impl_.value_.str_data_.Release();
 }
-inline void GetResponse::set_allocated_str_value(std::string* value) {
+inline void GetResponse::set_allocated_str_data(std::string* value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (has_value()) {
     clear_value();
   }
   if (value != nullptr) {
-    set_has_str_value();
-    _impl_.value_.str_value_.InitAllocated(value, GetArena());
+    set_has_str_data();
+    _impl_.value_.str_data_.InitAllocated(value, GetArena());
   }
-  // @@protoc_insertion_point(field_set_allocated:memorymanager.GetResponse.str_value)
-}
-
-// bool is_null = 3;
-inline void GetResponse::clear_is_null() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.is_null_ = false;
-}
-inline bool GetResponse::is_null() const {
-  // @@protoc_insertion_point(field_get:memorymanager.GetResponse.is_null)
-  return _internal_is_null();
-}
-inline void GetResponse::set_is_null(bool value) {
-  _internal_set_is_null(value);
-  // @@protoc_insertion_point(field_set:memorymanager.GetResponse.is_null)
-}
-inline bool GetResponse::_internal_is_null() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.is_null_;
-}
-inline void GetResponse::_internal_set_is_null(bool value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.is_null_ = value;
-}
-
-// string error_message = 4;
-inline void GetResponse::clear_error_message() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.error_message_.ClearToEmpty();
-}
-inline const std::string& GetResponse::error_message() const
-    ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:memorymanager.GetResponse.error_message)
-  return _internal_error_message();
-}
-template <typename Arg_, typename... Args_>
-inline PROTOBUF_ALWAYS_INLINE void GetResponse::set_error_message(Arg_&& arg,
-                                                     Args_... args) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.error_message_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
-  // @@protoc_insertion_point(field_set:memorymanager.GetResponse.error_message)
-}
-inline std::string* GetResponse::mutable_error_message() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  std::string* _s = _internal_mutable_error_message();
-  // @@protoc_insertion_point(field_mutable:memorymanager.GetResponse.error_message)
-  return _s;
-}
-inline const std::string& GetResponse::_internal_error_message() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.error_message_.Get();
-}
-inline void GetResponse::_internal_set_error_message(const std::string& value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.error_message_.Set(value, GetArena());
-}
-inline std::string* GetResponse::_internal_mutable_error_message() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  return _impl_.error_message_.Mutable( GetArena());
-}
-inline std::string* GetResponse::release_error_message() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:memorymanager.GetResponse.error_message)
-  return _impl_.error_message_.Release();
-}
-inline void GetResponse::set_allocated_error_message(std::string* value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.error_message_.SetAllocated(value, GetArena());
-  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.error_message_.IsDefault()) {
-    _impl_.error_message_.Set("", GetArena());
-  }
-  // @@protoc_insertion_point(field_set_allocated:memorymanager.GetResponse.error_message)
+  // @@protoc_insertion_point(field_set_allocated:memorymanager.GetResponse.str_data)
 }
 
 inline bool GetResponse::has_value() const {
@@ -2695,77 +2578,7 @@ inline void RefCountRequest::_internal_set_id(::int32_t value) {
 
 // RefCountResponse
 
-// bool success = 1;
-inline void RefCountResponse::clear_success() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.success_ = false;
-}
-inline bool RefCountResponse::success() const {
-  // @@protoc_insertion_point(field_get:memorymanager.RefCountResponse.success)
-  return _internal_success();
-}
-inline void RefCountResponse::set_success(bool value) {
-  _internal_set_success(value);
-  // @@protoc_insertion_point(field_set:memorymanager.RefCountResponse.success)
-}
-inline bool RefCountResponse::_internal_success() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.success_;
-}
-inline void RefCountResponse::_internal_set_success(bool value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.success_ = value;
-}
-
-// string error_message = 2;
-inline void RefCountResponse::clear_error_message() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.error_message_.ClearToEmpty();
-}
-inline const std::string& RefCountResponse::error_message() const
-    ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:memorymanager.RefCountResponse.error_message)
-  return _internal_error_message();
-}
-template <typename Arg_, typename... Args_>
-inline PROTOBUF_ALWAYS_INLINE void RefCountResponse::set_error_message(Arg_&& arg,
-                                                     Args_... args) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.error_message_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
-  // @@protoc_insertion_point(field_set:memorymanager.RefCountResponse.error_message)
-}
-inline std::string* RefCountResponse::mutable_error_message() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  std::string* _s = _internal_mutable_error_message();
-  // @@protoc_insertion_point(field_mutable:memorymanager.RefCountResponse.error_message)
-  return _s;
-}
-inline const std::string& RefCountResponse::_internal_error_message() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.error_message_.Get();
-}
-inline void RefCountResponse::_internal_set_error_message(const std::string& value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.error_message_.Set(value, GetArena());
-}
-inline std::string* RefCountResponse::_internal_mutable_error_message() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  return _impl_.error_message_.Mutable( GetArena());
-}
-inline std::string* RefCountResponse::release_error_message() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:memorymanager.RefCountResponse.error_message)
-  return _impl_.error_message_.Release();
-}
-inline void RefCountResponse::set_allocated_error_message(std::string* value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.error_message_.SetAllocated(value, GetArena());
-  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.error_message_.IsDefault()) {
-    _impl_.error_message_.Set("", GetArena());
-  }
-  // @@protoc_insertion_point(field_set_allocated:memorymanager.RefCountResponse.error_message)
-}
-
-// int32 ref_count = 3;
+// int32 ref_count = 1;
 inline void RefCountResponse::clear_ref_count() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.ref_count_ = 0;
@@ -2799,10 +2612,10 @@ namespace google {
 namespace protobuf {
 
 template <>
-struct is_proto_enum<::memorymanager::CreateRequest_Type> : std::true_type {};
+struct is_proto_enum<::memorymanager::DataType> : std::true_type {};
 template <>
-inline const EnumDescriptor* GetEnumDescriptor<::memorymanager::CreateRequest_Type>() {
-  return ::memorymanager::CreateRequest_Type_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor<::memorymanager::DataType>() {
+  return ::memorymanager::DataType_descriptor();
 }
 
 }  // namespace protobuf

@@ -1,11 +1,14 @@
 #include "MPointers.h"
 #include <stdexcept>
+#include <chrono>
 
-template <typename T>
-std::shared_ptr<MemoryManager::Stub> MPointer<T>::stub_ = nullptr;
+// Definir el stub compartido
+std::shared_ptr<MemoryManager::Stub> MPointerBase::stub_ = nullptr;
 
-template <typename T>
-void MPointer<T>::Init(const std::string& server_address) {
+// Implementar Init una sola vez
+void MPointerBase::Init(const std::string& server_address) {
+    if (stub_ != nullptr) return;  // Ya está inicializado
+
     auto channel = grpc::CreateChannel(server_address, grpc::InsecureChannelCredentials());
     stub_ = MemoryManager::NewStub(channel);
 
@@ -16,26 +19,14 @@ void MPointer<T>::Init(const std::string& server_address) {
 }
 
 template <typename T>
-MPointer<T> MPointer<T>::New() {
+MPointer<T> MPointer<T>::New(size_t size) {
     ClientContext context;
     CreateRequest request;
     CreateResponse response;
 
-    request.set_size(sizeof(T));
-
-    if (std::is_same<T, int>::value) {
-        request.set_type(CreateRequest::INT);
-    } else if (std::is_same<T, float>::value) {
-        request.set_type(CreateRequest::FLOAT);
-    } else if (std::is_same<T, double>::value) {
-        request.set_type(CreateRequest::DOUBLE);
-    } else if (std::is_same<T, char>::value) {
-        request.set_type(CreateRequest::CHAR);
-    } else if (std::is_same<T, std::string>::value) {
-        request.set_type(CreateRequest::STRING);
-    } else {
-        throw std::runtime_error("Unsupported type");
-    }
+    uint32_t request_size = static_cast<uint32_t>(size > 0 ? size : getTypeSize());
+    request.set_size(request_size);
+    request.set_type(getProtoType());
 
     Status status = stub_->Create(&context, request, &response);
     if (!status.ok()) {
@@ -51,6 +42,24 @@ MPointer<T>::MPointer(int id) : id_(id), cached_value_(), dirty_(false) {
 }
 
 template <typename T>
+MPointer<T>::MPointer(const MPointer& other) :
+    id_(other.id_), cached_value_(other.cached_value_), dirty_(other.dirty_) {
+    if (id_ != -1) increaseRefCount();
+}
+
+template <typename T>
+MPointer<T>::MPointer(MPointer&& other) noexcept :
+    id_(other.id_), cached_value_(std::move(other.cached_value_)), dirty_(other.dirty_) {
+    other.id_ = -1;
+    other.dirty_ = false;
+}
+
+template <typename T>
+MPointer<T>::~MPointer() {
+    if (id_ != -1) decreaseRefCount();
+}
+
+template <typename T>
 void MPointer<T>::fetchValue() const {
     if (dirty_) return;
 
@@ -58,24 +67,27 @@ void MPointer<T>::fetchValue() const {
     GetRequest request;
     GetResponse response;
     request.set_id(id_);
+    request.set_expected_type(getProtoType());
 
     Status status = stub_->Get(&context, request, &response);
     if (!status.ok()) {
         throw std::runtime_error("Failed to get value: " + status.error_message());
     }
 
-    if constexpr (std::is_same_v<T, int>) {
-        cached_value_ = response.int_value();
-    } else if constexpr (std::is_same_v<T, float>) {
-        cached_value_ = response.float_value();
-    } else if constexpr (std::is_same_v<T, double>) {
-        cached_value_ = response.double_value();
-    } else if constexpr (std::is_same_v<T, char>) {
-        cached_value_ = response.char_value();
-    } else if constexpr (std::is_same_v<T, std::string>) {
-        cached_value_ = response.string_value();
+    if constexpr (std::is_same_v<T, std::string>) {
+        if (response.value_case() != GetResponse::kStrData) {
+            throw std::runtime_error("Expected string value not received");
+        }
+        cached_value_ = response.str_data();
     } else {
-        throw std::runtime_error("Unsupported type during fetchValue");
+        if (response.value_case() != GetResponse::kBinaryData) {
+            throw std::runtime_error("Expected binary data not received");
+        }
+        if (response.binary_data().size() != sizeof(T)) {
+            throw std::runtime_error("Invalid data size received");
+        }
+        // Copia segura del valor binario
+        memcpy(&cached_value_, response.binary_data().data(), sizeof(T));
     }
 }
 
@@ -87,24 +99,55 @@ void MPointer<T>::storeValue() const {
     SetRequest request;
     SetResponse response;
     request.set_id(id_);
+    request.set_type(getProtoType());
 
-    if constexpr (std::is_same_v<T, int>) {
-        request.set_int_value(cached_value_);
-    } else if constexpr (std::is_same_v<T, float>) {
-        request.set_float_value(cached_value_);
-    } else if constexpr (std::is_same_v<T, double>) {
-        request.set_double_value(cached_value_);
-    } else if constexpr (std::is_same_v<T, char>) {
-        request.set_char_value(cached_value_);
-    } else if constexpr (std::is_same_v<T, std::string>) {
-        request.set_string_value(cached_value_);
+    if constexpr (std::is_same_v<T, std::string>) {
+        request.set_str_data(cached_value_);
     } else {
-        throw std::runtime_error("Unsupported type during storeValue");
+        request.set_binary_data(std::string(reinterpret_cast<const char*>(&cached_value_), sizeof(T)));
     }
 
     Status status = stub_->Set(&context, request, &response);
     if (!status.ok() || !response.success()) {
-        throw std::runtime_error("Failed to set value: " + status.error_message());
+        throw std::runtime_error("Failed to set value: " +
+            (status.ok() ? response.error_message() : status.error_message()));
+    }
+    dirty_ = false;
+}
+
+template <>
+void MPointer<std::string>::fetchValue() const {
+    if (dirty_) return;
+
+    ClientContext context;
+    GetRequest request;
+    GetResponse response;
+    request.set_id(id_);
+    request.set_expected_type(DataType::STRING);
+
+    Status status = stub_->Get(&context, request, &response);
+    if (!status.ok() || response.value_case() != GetResponse::kStrData) {
+        throw std::runtime_error("Failed to get string value: " +
+            (status.ok() ? "invalid response" : status.error_message()));
+    }
+    cached_value_ = response.str_data();
+}
+
+template <>
+void MPointer<std::string>::storeValue() const {
+    if (!dirty_) return;
+
+    ClientContext context;
+    SetRequest request;
+    SetResponse response;
+    request.set_id(id_);
+    request.set_type(DataType::STRING);
+    request.set_str_data(cached_value_);
+
+    Status status = stub_->Set(&context, request, &response);
+    if (!status.ok() || !response.success()) {
+        throw std::runtime_error("Failed to set string value: " +
+            (status.ok() ? response.error_message() : status.error_message()));
     }
     dirty_ = false;
 }
@@ -118,7 +161,7 @@ void MPointer<T>::increaseRefCount() {
 
     Status status = stub_->IncreaseRefCount(&context, request, &response);
     if (!status.ok()) {
-        throw std::runtime_error("IncreaseRefCount failed");
+        throw std::runtime_error("IncreaseRefCount failed: " + status.error_message());
     }
 }
 
@@ -131,7 +174,7 @@ void MPointer<T>::decreaseRefCount() {
 
     Status status = stub_->DecreaseRefCount(&context, request, &response);
     if (!status.ok()) {
-        std::cerr << "Warning: DecreaseRefCount failed" << std::endl;
+        std::cerr << "Warning: DecreaseRefCount failed: " << status.error_message() << std::endl;
     }
 }
 
@@ -195,9 +238,9 @@ const T* MPointer<T>::operator->() const {
 }
 
 // Instanciaciones explícitas
-template class MPointer<int>;
+template class MPointer<int32_t>;
 template class MPointer<float>;
-template class MPointer<double>;
 template class MPointer<char>;
 template class MPointer<std::string>;
+
 

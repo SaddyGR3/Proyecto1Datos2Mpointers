@@ -58,6 +58,7 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
 inline constexpr SetRequest::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : id_{0},
+        type_{static_cast< ::memorymanager::DataType >(0)},
         value_{},
         _cached_size_{0},
         _oneof_case_{} {}
@@ -84,11 +85,7 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
 
 inline constexpr RefCountResponse::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
-      : error_message_(
-            &::google::protobuf::internal::fixed_address_empty_string,
-            ::_pbi::ConstantInitialized()),
-        success_{false},
-        ref_count_{0},
+      : ref_count_{0},
         _cached_size_{0} {}
 
 template <typename>
@@ -138,10 +135,7 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
 
 inline constexpr GetResponse::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
-      : error_message_(
-            &::google::protobuf::internal::fixed_address_empty_string,
-            ::_pbi::ConstantInitialized()),
-        is_null_{false},
+      : type_{static_cast< ::memorymanager::DataType >(0)},
         value_{},
         _cached_size_{0},
         _oneof_case_{} {}
@@ -169,7 +163,7 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
 inline constexpr GetRequest::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : id_{0},
-        force_refresh_{false},
+        expected_type_{static_cast< ::memorymanager::DataType >(0)},
         _cached_size_{0} {}
 
 template <typename>
@@ -194,10 +188,8 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
 
 inline constexpr CreateResponse::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
-      : error_message_(
-            &::google::protobuf::internal::fixed_address_empty_string,
-            ::_pbi::ConstantInitialized()),
-        id_{0},
+      : id_{0},
+        type_{static_cast< ::memorymanager::DataType >(0)},
         actual_size_{0u},
         _cached_size_{0} {}
 
@@ -223,8 +215,8 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
 
 inline constexpr CreateRequest::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
-      : size_{0u},
-        type_{static_cast< ::memorymanager::CreateRequest_Type >(0)},
+      : type_{static_cast< ::memorymanager::DataType >(0)},
+        size_{0u},
         _cached_size_{0} {}
 
 template <typename>
@@ -261,8 +253,8 @@ const ::uint32_t
         ~0u,  // no _inlined_string_donated_
         ~0u,  // no _split_
         ~0u,  // no sizeof(Split)
-        PROTOBUF_FIELD_OFFSET(::memorymanager::CreateRequest, _impl_.size_),
         PROTOBUF_FIELD_OFFSET(::memorymanager::CreateRequest, _impl_.type_),
+        PROTOBUF_FIELD_OFFSET(::memorymanager::CreateRequest, _impl_.size_),
         ~0u,  // no _has_bits_
         PROTOBUF_FIELD_OFFSET(::memorymanager::CreateResponse, _internal_metadata_),
         ~0u,  // no _extensions_
@@ -272,8 +264,8 @@ const ::uint32_t
         ~0u,  // no _split_
         ~0u,  // no sizeof(Split)
         PROTOBUF_FIELD_OFFSET(::memorymanager::CreateResponse, _impl_.id_),
+        PROTOBUF_FIELD_OFFSET(::memorymanager::CreateResponse, _impl_.type_),
         PROTOBUF_FIELD_OFFSET(::memorymanager::CreateResponse, _impl_.actual_size_),
-        PROTOBUF_FIELD_OFFSET(::memorymanager::CreateResponse, _impl_.error_message_),
         ~0u,  // no _has_bits_
         PROTOBUF_FIELD_OFFSET(::memorymanager::SetRequest, _internal_metadata_),
         ~0u,  // no _extensions_
@@ -283,6 +275,7 @@ const ::uint32_t
         ~0u,  // no _split_
         ~0u,  // no sizeof(Split)
         PROTOBUF_FIELD_OFFSET(::memorymanager::SetRequest, _impl_.id_),
+        PROTOBUF_FIELD_OFFSET(::memorymanager::SetRequest, _impl_.type_),
         ::_pbi::kInvalidFieldOffsetTag,
         ::_pbi::kInvalidFieldOffsetTag,
         PROTOBUF_FIELD_OFFSET(::memorymanager::SetRequest, _impl_.value_),
@@ -306,7 +299,7 @@ const ::uint32_t
         ~0u,  // no _split_
         ~0u,  // no sizeof(Split)
         PROTOBUF_FIELD_OFFSET(::memorymanager::GetRequest, _impl_.id_),
-        PROTOBUF_FIELD_OFFSET(::memorymanager::GetRequest, _impl_.force_refresh_),
+        PROTOBUF_FIELD_OFFSET(::memorymanager::GetRequest, _impl_.expected_type_),
         ~0u,  // no _has_bits_
         PROTOBUF_FIELD_OFFSET(::memorymanager::GetResponse, _internal_metadata_),
         ~0u,  // no _extensions_
@@ -315,10 +308,9 @@ const ::uint32_t
         ~0u,  // no _inlined_string_donated_
         ~0u,  // no _split_
         ~0u,  // no sizeof(Split)
+        PROTOBUF_FIELD_OFFSET(::memorymanager::GetResponse, _impl_.type_),
         ::_pbi::kInvalidFieldOffsetTag,
         ::_pbi::kInvalidFieldOffsetTag,
-        PROTOBUF_FIELD_OFFSET(::memorymanager::GetResponse, _impl_.is_null_),
-        PROTOBUF_FIELD_OFFSET(::memorymanager::GetResponse, _impl_.error_message_),
         PROTOBUF_FIELD_OFFSET(::memorymanager::GetResponse, _impl_.value_),
         ~0u,  // no _has_bits_
         PROTOBUF_FIELD_OFFSET(::memorymanager::RefCountRequest, _internal_metadata_),
@@ -337,8 +329,6 @@ const ::uint32_t
         ~0u,  // no _inlined_string_donated_
         ~0u,  // no _split_
         ~0u,  // no sizeof(Split)
-        PROTOBUF_FIELD_OFFSET(::memorymanager::RefCountResponse, _impl_.success_),
-        PROTOBUF_FIELD_OFFSET(::memorymanager::RefCountResponse, _impl_.error_message_),
         PROTOBUF_FIELD_OFFSET(::memorymanager::RefCountResponse, _impl_.ref_count_),
 };
 
@@ -347,9 +337,9 @@ static const ::_pbi::MigrationSchema
         {0, -1, -1, sizeof(::memorymanager::CreateRequest)},
         {10, -1, -1, sizeof(::memorymanager::CreateResponse)},
         {21, -1, -1, sizeof(::memorymanager::SetRequest)},
-        {33, -1, -1, sizeof(::memorymanager::SetResponse)},
-        {44, -1, -1, sizeof(::memorymanager::GetRequest)},
-        {54, -1, -1, sizeof(::memorymanager::GetResponse)},
+        {34, -1, -1, sizeof(::memorymanager::SetResponse)},
+        {45, -1, -1, sizeof(::memorymanager::GetRequest)},
+        {55, -1, -1, sizeof(::memorymanager::GetResponse)},
         {67, -1, -1, sizeof(::memorymanager::RefCountRequest)},
         {76, -1, -1, sizeof(::memorymanager::RefCountResponse)},
 };
@@ -365,39 +355,40 @@ static const ::_pb::Message* const file_default_instances[] = {
 };
 const char descriptor_table_protodef_memory_5fmanager_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
     protodesc_cold) = {
-    "\n\024memory_manager.proto\022\rmemorymanager\"\214\001"
-    "\n\rCreateRequest\022\014\n\004size\030\001 \001(\r\022/\n\004type\030\002 "
-    "\001(\0162!.memorymanager.CreateRequest.Type\"<"
-    "\n\004Type\022\007\n\003INT\020\000\022\t\n\005FLOAT\020\001\022\n\n\006DOUBLE\020\002\022\010"
-    "\n\004CHAR\020\003\022\n\n\006STRING\020\004\"H\n\016CreateResponse\022\n"
-    "\n\002id\030\001 \001(\005\022\023\n\013actual_size\030\002 \001(\r\022\025\n\rerror"
-    "_message\030\003 \001(\t\"J\n\nSetRequest\022\n\n\002id\030\001 \001(\005"
-    "\022\022\n\010raw_data\030\002 \001(\014H\000\022\023\n\tstr_value\030\003 \001(\tH"
-    "\000B\007\n\005value\"L\n\013SetResponse\022\017\n\007success\030\001 \001"
-    "(\010\022\025\n\rerror_message\030\002 \001(\t\022\025\n\rbytes_writt"
-    "en\030\003 \001(\r\"/\n\nGetRequest\022\n\n\002id\030\001 \001(\005\022\025\n\rfo"
-    "rce_refresh\030\002 \001(\010\"g\n\013GetResponse\022\022\n\010raw_"
-    "data\030\001 \001(\014H\000\022\023\n\tstr_value\030\002 \001(\tH\000\022\017\n\007is_"
-    "null\030\003 \001(\010\022\025\n\rerror_message\030\004 \001(\tB\007\n\005val"
-    "ue\"\035\n\017RefCountRequest\022\n\n\002id\030\001 \001(\005\"M\n\020Ref"
-    "CountResponse\022\017\n\007success\030\001 \001(\010\022\025\n\rerror_"
-    "message\030\002 \001(\t\022\021\n\tref_count\030\003 \001(\0052\374\002\n\rMem"
-    "oryManager\022E\n\006Create\022\034.memorymanager.Cre"
-    "ateRequest\032\035.memorymanager.CreateRespons"
-    "e\022<\n\003Set\022\031.memorymanager.SetRequest\032\032.me"
-    "morymanager.SetResponse\022<\n\003Get\022\031.memorym"
-    "anager.GetRequest\032\032.memorymanager.GetRes"
-    "ponse\022S\n\020IncreaseRefCount\022\036.memorymanage"
-    "r.RefCountRequest\032\037.memorymanager.RefCou"
-    "ntResponse\022S\n\020DecreaseRefCount\022\036.memorym"
-    "anager.RefCountRequest\032\037.memorymanager.R"
-    "efCountResponseb\006proto3"
+    "\n\024memory_manager.proto\022\rmemorymanager\"D\n"
+    "\rCreateRequest\022%\n\004type\030\001 \001(\0162\027.memoryman"
+    "ager.DataType\022\014\n\004size\030\002 \001(\r\"X\n\016CreateRes"
+    "ponse\022\n\n\002id\030\001 \001(\005\022%\n\004type\030\002 \001(\0162\027.memory"
+    "manager.DataType\022\023\n\013actual_size\030\003 \001(\r\"s\n"
+    "\nSetRequest\022\n\n\002id\030\001 \001(\005\022%\n\004type\030\002 \001(\0162\027."
+    "memorymanager.DataType\022\025\n\013binary_data\030\003 "
+    "\001(\014H\000\022\022\n\010str_data\030\004 \001(\tH\000B\007\n\005value\"L\n\013Se"
+    "tResponse\022\017\n\007success\030\001 \001(\010\022\025\n\rerror_mess"
+    "age\030\002 \001(\t\022\025\n\rbytes_written\030\003 \001(\r\"H\n\nGetR"
+    "equest\022\n\n\002id\030\001 \001(\005\022.\n\rexpected_type\030\002 \001("
+    "\0162\027.memorymanager.DataType\"h\n\013GetRespons"
+    "e\022%\n\004type\030\001 \001(\0162\027.memorymanager.DataType"
+    "\022\025\n\013binary_data\030\002 \001(\014H\000\022\022\n\010str_data\030\003 \001("
+    "\tH\000B\007\n\005value\"\035\n\017RefCountRequest\022\n\n\002id\030\001 "
+    "\001(\005\"%\n\020RefCountResponse\022\021\n\tref_count\030\001 \001"
+    "(\005*4\n\010DataType\022\007\n\003INT\020\000\022\t\n\005FLOAT\020\001\022\010\n\004CH"
+    "AR\020\002\022\n\n\006STRING\020\0032\374\002\n\rMemoryManager\022E\n\006Cr"
+    "eate\022\034.memorymanager.CreateRequest\032\035.mem"
+    "orymanager.CreateResponse\022<\n\003Set\022\031.memor"
+    "ymanager.SetRequest\032\032.memorymanager.SetR"
+    "esponse\022<\n\003Get\022\031.memorymanager.GetReques"
+    "t\032\032.memorymanager.GetResponse\022S\n\020Increas"
+    "eRefCount\022\036.memorymanager.RefCountReques"
+    "t\032\037.memorymanager.RefCountResponse\022S\n\020De"
+    "creaseRefCount\022\036.memorymanager.RefCountR"
+    "equest\032\037.memorymanager.RefCountResponseb"
+    "\006proto3"
 };
 static ::absl::once_flag descriptor_table_memory_5fmanager_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_memory_5fmanager_2eproto = {
     false,
     false,
-    1063,
+    1087,
     descriptor_table_protodef_memory_5fmanager_2eproto,
     "memory_manager.proto",
     &descriptor_table_memory_5fmanager_2eproto_once,
@@ -411,29 +402,15 @@ PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_memory_5fmanag
     file_level_service_descriptors_memory_5fmanager_2eproto,
 };
 namespace memorymanager {
-const ::google::protobuf::EnumDescriptor* CreateRequest_Type_descriptor() {
+const ::google::protobuf::EnumDescriptor* DataType_descriptor() {
   ::google::protobuf::internal::AssignDescriptors(&descriptor_table_memory_5fmanager_2eproto);
   return file_level_enum_descriptors_memory_5fmanager_2eproto[0];
 }
-PROTOBUF_CONSTINIT const uint32_t CreateRequest_Type_internal_data_[] = {
-    327680u, 0u, };
-bool CreateRequest_Type_IsValid(int value) {
-  return 0 <= value && value <= 4;
+PROTOBUF_CONSTINIT const uint32_t DataType_internal_data_[] = {
+    262144u, 0u, };
+bool DataType_IsValid(int value) {
+  return 0 <= value && value <= 3;
 }
-#if (__cplusplus < 201703) && \
-  (!defined(_MSC_VER) || (_MSC_VER >= 1900 && _MSC_VER < 1912))
-
-constexpr CreateRequest_Type CreateRequest::INT;
-constexpr CreateRequest_Type CreateRequest::FLOAT;
-constexpr CreateRequest_Type CreateRequest::DOUBLE;
-constexpr CreateRequest_Type CreateRequest::CHAR;
-constexpr CreateRequest_Type CreateRequest::STRING;
-constexpr CreateRequest_Type CreateRequest::Type_MIN;
-constexpr CreateRequest_Type CreateRequest::Type_MAX;
-constexpr int CreateRequest::Type_ARRAYSIZE;
-
-#endif  // (__cplusplus < 201703) &&
-        // (!defined(_MSC_VER) || (_MSC_VER >= 1900 && _MSC_VER < 1912))
 // ===================================================================
 
 class CreateRequest::_Internal {
@@ -462,11 +439,11 @@ inline PROTOBUF_NDEBUG_INLINE CreateRequest::Impl_::Impl_(
 inline void CreateRequest::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
   ::memset(reinterpret_cast<char *>(&_impl_) +
-               offsetof(Impl_, size_),
+               offsetof(Impl_, type_),
            0,
-           offsetof(Impl_, type_) -
-               offsetof(Impl_, size_) +
-               sizeof(Impl_::type_));
+           offsetof(Impl_, size_) -
+               offsetof(Impl_, type_) +
+               sizeof(Impl_::size_));
 }
 CreateRequest::~CreateRequest() {
   // @@protoc_insertion_point(destructor:memorymanager.CreateRequest)
@@ -533,21 +510,21 @@ const ::_pbi::TcParseTable<1, 2, 0, 0, 2> CreateRequest::_table_ = {
     ::_pbi::TcParser::GetTable<::memorymanager::CreateRequest>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // .memorymanager.CreateRequest.Type type = 2;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CreateRequest, _impl_.type_), 63>(),
-     {16, 63, 0, PROTOBUF_FIELD_OFFSET(CreateRequest, _impl_.type_)}},
-    // uint32 size = 1;
+    // uint32 size = 2;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CreateRequest, _impl_.size_), 63>(),
-     {8, 63, 0, PROTOBUF_FIELD_OFFSET(CreateRequest, _impl_.size_)}},
+     {16, 63, 0, PROTOBUF_FIELD_OFFSET(CreateRequest, _impl_.size_)}},
+    // .memorymanager.DataType type = 1;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CreateRequest, _impl_.type_), 63>(),
+     {8, 63, 0, PROTOBUF_FIELD_OFFSET(CreateRequest, _impl_.type_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // uint32 size = 1;
-    {PROTOBUF_FIELD_OFFSET(CreateRequest, _impl_.size_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kUInt32)},
-    // .memorymanager.CreateRequest.Type type = 2;
+    // .memorymanager.DataType type = 1;
     {PROTOBUF_FIELD_OFFSET(CreateRequest, _impl_.type_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kOpenEnum)},
+    // uint32 size = 2;
+    {PROTOBUF_FIELD_OFFSET(CreateRequest, _impl_.size_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUInt32)},
   }},
   // no aux_entries
   {{
@@ -561,9 +538,9 @@ PROTOBUF_NOINLINE void CreateRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  ::memset(&_impl_.size_, 0, static_cast<::size_t>(
-      reinterpret_cast<char*>(&_impl_.type_) -
-      reinterpret_cast<char*>(&_impl_.size_)) + sizeof(_impl_.type_));
+  ::memset(&_impl_.type_, 0, static_cast<::size_t>(
+      reinterpret_cast<char*>(&_impl_.size_) -
+      reinterpret_cast<char*>(&_impl_.type_)) + sizeof(_impl_.size_));
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
@@ -582,18 +559,18 @@ PROTOBUF_NOINLINE void CreateRequest::Clear() {
           ::uint32_t cached_has_bits = 0;
           (void)cached_has_bits;
 
-          // uint32 size = 1;
-          if (this_._internal_size() != 0) {
-            target = stream->EnsureSpace(target);
-            target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
-                1, this_._internal_size(), target);
-          }
-
-          // .memorymanager.CreateRequest.Type type = 2;
+          // .memorymanager.DataType type = 1;
           if (this_._internal_type() != 0) {
             target = stream->EnsureSpace(target);
             target = ::_pbi::WireFormatLite::WriteEnumToArray(
-                2, this_._internal_type(), target);
+                1, this_._internal_type(), target);
+          }
+
+          // uint32 size = 2;
+          if (this_._internal_size() != 0) {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
+                2, this_._internal_size(), target);
           }
 
           if (PROTOBUF_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
@@ -621,15 +598,15 @@ PROTOBUF_NOINLINE void CreateRequest::Clear() {
 
           ::_pbi::Prefetch5LinesFrom7Lines(&this_);
            {
-            // uint32 size = 1;
-            if (this_._internal_size() != 0) {
-              total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
-                  this_._internal_size());
-            }
-            // .memorymanager.CreateRequest.Type type = 2;
+            // .memorymanager.DataType type = 1;
             if (this_._internal_type() != 0) {
               total_size += 1 +
                             ::_pbi::WireFormatLite::EnumSize(this_._internal_type());
+            }
+            // uint32 size = 2;
+            if (this_._internal_size() != 0) {
+              total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
+                  this_._internal_size());
             }
           }
           return this_.MaybeComputeUnknownFieldsSize(total_size,
@@ -644,11 +621,11 @@ void CreateRequest::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::g
   ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from._internal_size() != 0) {
-    _this->_impl_.size_ = from._impl_.size_;
-  }
   if (from._internal_type() != 0) {
     _this->_impl_.type_ = from._impl_.type_;
+  }
+  if (from._internal_size() != 0) {
+    _this->_impl_.size_ = from._impl_.size_;
   }
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -665,11 +642,11 @@ void CreateRequest::InternalSwap(CreateRequest* PROTOBUF_RESTRICT other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(CreateRequest, _impl_.type_)
-      + sizeof(CreateRequest::_impl_.type_)
-      - PROTOBUF_FIELD_OFFSET(CreateRequest, _impl_.size_)>(
-          reinterpret_cast<char*>(&_impl_.size_),
-          reinterpret_cast<char*>(&other->_impl_.size_));
+      PROTOBUF_FIELD_OFFSET(CreateRequest, _impl_.size_)
+      + sizeof(CreateRequest::_impl_.size_)
+      - PROTOBUF_FIELD_OFFSET(CreateRequest, _impl_.type_)>(
+          reinterpret_cast<char*>(&_impl_.type_),
+          reinterpret_cast<char*>(&other->_impl_.type_));
 }
 
 ::google::protobuf::Metadata CreateRequest::GetMetadata() const {
@@ -690,40 +667,15 @@ CreateResponse::CreateResponse(::google::protobuf::Arena* arena)
   SharedCtor(arena);
   // @@protoc_insertion_point(arena_constructor:memorymanager.CreateResponse)
 }
-inline PROTOBUF_NDEBUG_INLINE CreateResponse::Impl_::Impl_(
-    ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
-    const Impl_& from, const ::memorymanager::CreateResponse& from_msg)
-      : error_message_(arena, from.error_message_),
-        _cached_size_{0} {}
-
 CreateResponse::CreateResponse(
-    ::google::protobuf::Arena* arena,
-    const CreateResponse& from)
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-    : ::google::protobuf::Message(arena, _class_data_.base()) {
-#else   // PROTOBUF_CUSTOM_VTABLE
-    : ::google::protobuf::Message(arena) {
-#endif  // PROTOBUF_CUSTOM_VTABLE
-  CreateResponse* const _this = this;
-  (void)_this;
-  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
-      from._internal_metadata_);
-  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
-  ::memcpy(reinterpret_cast<char *>(&_impl_) +
-               offsetof(Impl_, id_),
-           reinterpret_cast<const char *>(&from._impl_) +
-               offsetof(Impl_, id_),
-           offsetof(Impl_, actual_size_) -
-               offsetof(Impl_, id_) +
-               sizeof(Impl_::actual_size_));
-
-  // @@protoc_insertion_point(copy_constructor:memorymanager.CreateResponse)
+    ::google::protobuf::Arena* arena, const CreateResponse& from)
+    : CreateResponse(arena) {
+  MergeFrom(from);
 }
 inline PROTOBUF_NDEBUG_INLINE CreateResponse::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility,
     ::google::protobuf::Arena* arena)
-      : error_message_(arena),
-        _cached_size_{0} {}
+      : _cached_size_{0} {}
 
 inline void CreateResponse::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
@@ -742,7 +694,6 @@ inline void CreateResponse::SharedDtor(MessageLite& self) {
   CreateResponse& this_ = static_cast<CreateResponse&>(self);
   this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   ABSL_DCHECK(this_.GetArena() == nullptr);
-  this_._impl_.error_message_.Destroy();
   this_._impl_.~Impl_();
 }
 
@@ -751,7 +702,7 @@ inline void* CreateResponse::PlacementNew_(const void*, void* mem,
   return ::new (mem) CreateResponse(arena);
 }
 constexpr auto CreateResponse::InternalNewImpl_() {
-  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(CreateResponse),
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(CreateResponse),
                                             alignof(CreateResponse));
 }
 PROTOBUF_CONSTINIT
@@ -782,7 +733,7 @@ const ::google::protobuf::internal::ClassData* CreateResponse::GetClassData() co
   return _class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<2, 3, 0, 50, 2> CreateResponse::_table_ = {
+const ::_pbi::TcParseTable<2, 3, 0, 0, 2> CreateResponse::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
@@ -804,30 +755,27 @@ const ::_pbi::TcParseTable<2, 3, 0, 50, 2> CreateResponse::_table_ = {
     // int32 id = 1;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CreateResponse, _impl_.id_), 63>(),
      {8, 63, 0, PROTOBUF_FIELD_OFFSET(CreateResponse, _impl_.id_)}},
-    // uint32 actual_size = 2;
+    // .memorymanager.DataType type = 2;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CreateResponse, _impl_.type_), 63>(),
+     {16, 63, 0, PROTOBUF_FIELD_OFFSET(CreateResponse, _impl_.type_)}},
+    // uint32 actual_size = 3;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CreateResponse, _impl_.actual_size_), 63>(),
-     {16, 63, 0, PROTOBUF_FIELD_OFFSET(CreateResponse, _impl_.actual_size_)}},
-    // string error_message = 3;
-    {::_pbi::TcParser::FastUS1,
-     {26, 63, 0, PROTOBUF_FIELD_OFFSET(CreateResponse, _impl_.error_message_)}},
+     {24, 63, 0, PROTOBUF_FIELD_OFFSET(CreateResponse, _impl_.actual_size_)}},
   }}, {{
     65535, 65535
   }}, {{
     // int32 id = 1;
     {PROTOBUF_FIELD_OFFSET(CreateResponse, _impl_.id_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
-    // uint32 actual_size = 2;
+    // .memorymanager.DataType type = 2;
+    {PROTOBUF_FIELD_OFFSET(CreateResponse, _impl_.type_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kOpenEnum)},
+    // uint32 actual_size = 3;
     {PROTOBUF_FIELD_OFFSET(CreateResponse, _impl_.actual_size_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUInt32)},
-    // string error_message = 3;
-    {PROTOBUF_FIELD_OFFSET(CreateResponse, _impl_.error_message_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   // no aux_entries
   {{
-    "\34\0\0\15\0\0\0\0"
-    "memorymanager.CreateResponse"
-    "error_message"
   }},
 };
 
@@ -838,7 +786,6 @@ PROTOBUF_NOINLINE void CreateResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  _impl_.error_message_.ClearToEmpty();
   ::memset(&_impl_.id_, 0, static_cast<::size_t>(
       reinterpret_cast<char*>(&_impl_.actual_size_) -
       reinterpret_cast<char*>(&_impl_.id_)) + sizeof(_impl_.actual_size_));
@@ -867,19 +814,18 @@ PROTOBUF_NOINLINE void CreateResponse::Clear() {
                     stream, this_._internal_id(), target);
           }
 
-          // uint32 actual_size = 2;
+          // .memorymanager.DataType type = 2;
+          if (this_._internal_type() != 0) {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteEnumToArray(
+                2, this_._internal_type(), target);
+          }
+
+          // uint32 actual_size = 3;
           if (this_._internal_actual_size() != 0) {
             target = stream->EnsureSpace(target);
             target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
-                2, this_._internal_actual_size(), target);
-          }
-
-          // string error_message = 3;
-          if (!this_._internal_error_message().empty()) {
-            const std::string& _s = this_._internal_error_message();
-            ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "memorymanager.CreateResponse.error_message");
-            target = stream->WriteStringMaybeAliased(3, _s, target);
+                3, this_._internal_actual_size(), target);
           }
 
           if (PROTOBUF_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
@@ -907,17 +853,17 @@ PROTOBUF_NOINLINE void CreateResponse::Clear() {
 
           ::_pbi::Prefetch5LinesFrom7Lines(&this_);
            {
-            // string error_message = 3;
-            if (!this_._internal_error_message().empty()) {
-              total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
-                                              this_._internal_error_message());
-            }
             // int32 id = 1;
             if (this_._internal_id() != 0) {
               total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
                   this_._internal_id());
             }
-            // uint32 actual_size = 2;
+            // .memorymanager.DataType type = 2;
+            if (this_._internal_type() != 0) {
+              total_size += 1 +
+                            ::_pbi::WireFormatLite::EnumSize(this_._internal_type());
+            }
+            // uint32 actual_size = 3;
             if (this_._internal_actual_size() != 0) {
               total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
                   this_._internal_actual_size());
@@ -935,11 +881,11 @@ void CreateResponse::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::
   ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (!from._internal_error_message().empty()) {
-    _this->_internal_set_error_message(from._internal_error_message());
-  }
   if (from._internal_id() != 0) {
     _this->_impl_.id_ = from._impl_.id_;
+  }
+  if (from._internal_type() != 0) {
+    _this->_impl_.type_ = from._impl_.type_;
   }
   if (from._internal_actual_size() != 0) {
     _this->_impl_.actual_size_ = from._impl_.actual_size_;
@@ -957,10 +903,7 @@ void CreateResponse::CopyFrom(const CreateResponse& from) {
 
 void CreateResponse::InternalSwap(CreateResponse* PROTOBUF_RESTRICT other) {
   using std::swap;
-  auto* arena = GetArena();
-  ABSL_DCHECK_EQ(arena, other->GetArena());
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.error_message_, &other->_impl_.error_message_, arena);
   ::google::protobuf::internal::memswap<
       PROTOBUF_FIELD_OFFSET(CreateResponse, _impl_.actual_size_)
       + sizeof(CreateResponse::_impl_.actual_size_)
@@ -1009,15 +952,21 @@ SetRequest::SetRequest(
   _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
-  _impl_.id_ = from._impl_.id_;
+  ::memcpy(reinterpret_cast<char *>(&_impl_) +
+               offsetof(Impl_, id_),
+           reinterpret_cast<const char *>(&from._impl_) +
+               offsetof(Impl_, id_),
+           offsetof(Impl_, type_) -
+               offsetof(Impl_, id_) +
+               sizeof(Impl_::type_));
   switch (value_case()) {
     case VALUE_NOT_SET:
       break;
-      case kRawData:
-        new (&_impl_.value_.raw_data_) decltype(_impl_.value_.raw_data_){arena, from._impl_.value_.raw_data_};
+      case kBinaryData:
+        new (&_impl_.value_.binary_data_) decltype(_impl_.value_.binary_data_){arena, from._impl_.value_.binary_data_};
         break;
-      case kStrValue:
-        new (&_impl_.value_.str_value_) decltype(_impl_.value_.str_value_){arena, from._impl_.value_.str_value_};
+      case kStrData:
+        new (&_impl_.value_.str_data_) decltype(_impl_.value_.str_data_){arena, from._impl_.value_.str_data_};
         break;
   }
 
@@ -1032,7 +981,12 @@ inline PROTOBUF_NDEBUG_INLINE SetRequest::Impl_::Impl_(
 
 inline void SetRequest::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
-  _impl_.id_ = {};
+  ::memset(reinterpret_cast<char *>(&_impl_) +
+               offsetof(Impl_, id_),
+           0,
+           offsetof(Impl_, type_) -
+               offsetof(Impl_, id_) +
+               sizeof(Impl_::type_));
 }
 SetRequest::~SetRequest() {
   // @@protoc_insertion_point(destructor:memorymanager.SetRequest)
@@ -1052,12 +1006,12 @@ void SetRequest::clear_value() {
 // @@protoc_insertion_point(one_of_clear_start:memorymanager.SetRequest)
   ::google::protobuf::internal::TSanWrite(&_impl_);
   switch (value_case()) {
-    case kRawData: {
-      _impl_.value_.raw_data_.Destroy();
+    case kBinaryData: {
+      _impl_.value_.binary_data_.Destroy();
       break;
     }
-    case kStrValue: {
-      _impl_.value_.str_value_.Destroy();
+    case kStrData: {
+      _impl_.value_.str_data_.Destroy();
       break;
     }
     case VALUE_NOT_SET: {
@@ -1104,15 +1058,15 @@ const ::google::protobuf::internal::ClassData* SetRequest::GetClassData() const 
   return _class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 3, 0, 42, 2> SetRequest::_table_ = {
+const ::_pbi::TcParseTable<1, 4, 0, 41, 2> SetRequest::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    3, 0,  // max_field_number, fast_idx_mask
+    4, 8,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967288,  // skipmap
+    4294967280,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    3,  // num_field_entries
+    4,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     _class_data_.base(),
@@ -1122,6 +1076,9 @@ const ::_pbi::TcParseTable<0, 3, 0, 42, 2> SetRequest::_table_ = {
     ::_pbi::TcParser::GetTable<::memorymanager::SetRequest>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
+    // .memorymanager.DataType type = 2;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(SetRequest, _impl_.type_), 63>(),
+     {16, 63, 0, PROTOBUF_FIELD_OFFSET(SetRequest, _impl_.type_)}},
     // int32 id = 1;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(SetRequest, _impl_.id_), 63>(),
      {8, 63, 0, PROTOBUF_FIELD_OFFSET(SetRequest, _impl_.id_)}},
@@ -1131,18 +1088,21 @@ const ::_pbi::TcParseTable<0, 3, 0, 42, 2> SetRequest::_table_ = {
     // int32 id = 1;
     {PROTOBUF_FIELD_OFFSET(SetRequest, _impl_.id_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
-    // bytes raw_data = 2;
-    {PROTOBUF_FIELD_OFFSET(SetRequest, _impl_.value_.raw_data_), _Internal::kOneofCaseOffset + 0, 0,
+    // .memorymanager.DataType type = 2;
+    {PROTOBUF_FIELD_OFFSET(SetRequest, _impl_.type_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kOpenEnum)},
+    // bytes binary_data = 3;
+    {PROTOBUF_FIELD_OFFSET(SetRequest, _impl_.value_.binary_data_), _Internal::kOneofCaseOffset + 0, 0,
     (0 | ::_fl::kFcOneof | ::_fl::kBytes | ::_fl::kRepAString)},
-    // string str_value = 3;
-    {PROTOBUF_FIELD_OFFSET(SetRequest, _impl_.value_.str_value_), _Internal::kOneofCaseOffset + 0, 0,
+    // string str_data = 4;
+    {PROTOBUF_FIELD_OFFSET(SetRequest, _impl_.value_.str_data_), _Internal::kOneofCaseOffset + 0, 0,
     (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   // no aux_entries
   {{
-    "\30\0\0\11\0\0\0\0"
+    "\30\0\0\0\10\0\0\0"
     "memorymanager.SetRequest"
-    "str_value"
+    "str_data"
   }},
 };
 
@@ -1153,7 +1113,9 @@ PROTOBUF_NOINLINE void SetRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  _impl_.id_ = 0;
+  ::memset(&_impl_.id_, 0, static_cast<::size_t>(
+      reinterpret_cast<char*>(&_impl_.type_) -
+      reinterpret_cast<char*>(&_impl_.id_)) + sizeof(_impl_.type_));
   clear_value();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
@@ -1180,17 +1142,24 @@ PROTOBUF_NOINLINE void SetRequest::Clear() {
                     stream, this_._internal_id(), target);
           }
 
+          // .memorymanager.DataType type = 2;
+          if (this_._internal_type() != 0) {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteEnumToArray(
+                2, this_._internal_type(), target);
+          }
+
           switch (this_.value_case()) {
-            case kRawData: {
-              const std::string& _s = this_._internal_raw_data();
-              target = stream->WriteBytesMaybeAliased(2, _s, target);
+            case kBinaryData: {
+              const std::string& _s = this_._internal_binary_data();
+              target = stream->WriteBytesMaybeAliased(3, _s, target);
               break;
             }
-            case kStrValue: {
-              const std::string& _s = this_._internal_str_value();
+            case kStrData: {
+              const std::string& _s = this_._internal_str_data();
               ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-                  _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "memorymanager.SetRequest.str_value");
-              target = stream->WriteStringMaybeAliased(3, _s, target);
+                  _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "memorymanager.SetRequest.str_data");
+              target = stream->WriteStringMaybeAliased(4, _s, target);
               break;
             }
             default:
@@ -1219,24 +1188,30 @@ PROTOBUF_NOINLINE void SetRequest::Clear() {
           // Prevent compiler warnings about cached_has_bits being unused
           (void)cached_has_bits;
 
+          ::_pbi::Prefetch5LinesFrom7Lines(&this_);
            {
             // int32 id = 1;
             if (this_._internal_id() != 0) {
               total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
                   this_._internal_id());
             }
+            // .memorymanager.DataType type = 2;
+            if (this_._internal_type() != 0) {
+              total_size += 1 +
+                            ::_pbi::WireFormatLite::EnumSize(this_._internal_type());
+            }
           }
           switch (this_.value_case()) {
-            // bytes raw_data = 2;
-            case kRawData: {
+            // bytes binary_data = 3;
+            case kBinaryData: {
               total_size += 1 + ::google::protobuf::internal::WireFormatLite::BytesSize(
-                                              this_._internal_raw_data());
+                                              this_._internal_binary_data());
               break;
             }
-            // string str_value = 3;
-            case kStrValue: {
+            // string str_data = 4;
+            case kStrData: {
               total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
-                                              this_._internal_str_value());
+                                              this_._internal_str_data());
               break;
             }
             case VALUE_NOT_SET: {
@@ -1259,6 +1234,9 @@ void SetRequest::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::goog
   if (from._internal_id() != 0) {
     _this->_impl_.id_ = from._impl_.id_;
   }
+  if (from._internal_type() != 0) {
+    _this->_impl_.type_ = from._impl_.type_;
+  }
   if (const uint32_t oneof_from_case = from._impl_._oneof_case_[0]) {
     const uint32_t oneof_to_case = _this->_impl_._oneof_case_[0];
     const bool oneof_needs_init = oneof_to_case != oneof_from_case;
@@ -1270,18 +1248,18 @@ void SetRequest::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::goog
     }
 
     switch (oneof_from_case) {
-      case kRawData: {
+      case kBinaryData: {
         if (oneof_needs_init) {
-          _this->_impl_.value_.raw_data_.InitDefault();
+          _this->_impl_.value_.binary_data_.InitDefault();
         }
-        _this->_impl_.value_.raw_data_.Set(from._internal_raw_data(), arena);
+        _this->_impl_.value_.binary_data_.Set(from._internal_binary_data(), arena);
         break;
       }
-      case kStrValue: {
+      case kStrData: {
         if (oneof_needs_init) {
-          _this->_impl_.value_.str_value_.InitDefault();
+          _this->_impl_.value_.str_data_.InitDefault();
         }
-        _this->_impl_.value_.str_value_.Set(from._internal_str_value(), arena);
+        _this->_impl_.value_.str_data_.Set(from._internal_str_data(), arena);
         break;
       }
       case VALUE_NOT_SET:
@@ -1302,7 +1280,12 @@ void SetRequest::CopyFrom(const SetRequest& from) {
 void SetRequest::InternalSwap(SetRequest* PROTOBUF_RESTRICT other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-        swap(_impl_.id_, other->_impl_.id_);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(SetRequest, _impl_.type_)
+      + sizeof(SetRequest::_impl_.type_)
+      - PROTOBUF_FIELD_OFFSET(SetRequest, _impl_.id_)>(
+          reinterpret_cast<char*>(&_impl_.id_),
+          reinterpret_cast<char*>(&other->_impl_.id_));
   swap(_impl_.value_, other->_impl_.value_);
   swap(_impl_._oneof_case_[0], other->_impl_._oneof_case_[0]);
 }
@@ -1636,9 +1619,9 @@ inline void GetRequest::SharedCtor(::_pb::Arena* arena) {
   ::memset(reinterpret_cast<char *>(&_impl_) +
                offsetof(Impl_, id_),
            0,
-           offsetof(Impl_, force_refresh_) -
+           offsetof(Impl_, expected_type_) -
                offsetof(Impl_, id_) +
-               sizeof(Impl_::force_refresh_));
+               sizeof(Impl_::expected_type_));
 }
 GetRequest::~GetRequest() {
   // @@protoc_insertion_point(destructor:memorymanager.GetRequest)
@@ -1705,9 +1688,9 @@ const ::_pbi::TcParseTable<1, 2, 0, 0, 2> GetRequest::_table_ = {
     ::_pbi::TcParser::GetTable<::memorymanager::GetRequest>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // bool force_refresh = 2;
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(GetRequest, _impl_.force_refresh_), 63>(),
-     {16, 63, 0, PROTOBUF_FIELD_OFFSET(GetRequest, _impl_.force_refresh_)}},
+    // .memorymanager.DataType expected_type = 2;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(GetRequest, _impl_.expected_type_), 63>(),
+     {16, 63, 0, PROTOBUF_FIELD_OFFSET(GetRequest, _impl_.expected_type_)}},
     // int32 id = 1;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(GetRequest, _impl_.id_), 63>(),
      {8, 63, 0, PROTOBUF_FIELD_OFFSET(GetRequest, _impl_.id_)}},
@@ -1717,9 +1700,9 @@ const ::_pbi::TcParseTable<1, 2, 0, 0, 2> GetRequest::_table_ = {
     // int32 id = 1;
     {PROTOBUF_FIELD_OFFSET(GetRequest, _impl_.id_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
-    // bool force_refresh = 2;
-    {PROTOBUF_FIELD_OFFSET(GetRequest, _impl_.force_refresh_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kBool)},
+    // .memorymanager.DataType expected_type = 2;
+    {PROTOBUF_FIELD_OFFSET(GetRequest, _impl_.expected_type_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kOpenEnum)},
   }},
   // no aux_entries
   {{
@@ -1734,8 +1717,8 @@ PROTOBUF_NOINLINE void GetRequest::Clear() {
   (void) cached_has_bits;
 
   ::memset(&_impl_.id_, 0, static_cast<::size_t>(
-      reinterpret_cast<char*>(&_impl_.force_refresh_) -
-      reinterpret_cast<char*>(&_impl_.id_)) + sizeof(_impl_.force_refresh_));
+      reinterpret_cast<char*>(&_impl_.expected_type_) -
+      reinterpret_cast<char*>(&_impl_.id_)) + sizeof(_impl_.expected_type_));
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
@@ -1761,11 +1744,11 @@ PROTOBUF_NOINLINE void GetRequest::Clear() {
                     stream, this_._internal_id(), target);
           }
 
-          // bool force_refresh = 2;
-          if (this_._internal_force_refresh() != 0) {
+          // .memorymanager.DataType expected_type = 2;
+          if (this_._internal_expected_type() != 0) {
             target = stream->EnsureSpace(target);
-            target = ::_pbi::WireFormatLite::WriteBoolToArray(
-                2, this_._internal_force_refresh(), target);
+            target = ::_pbi::WireFormatLite::WriteEnumToArray(
+                2, this_._internal_expected_type(), target);
           }
 
           if (PROTOBUF_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
@@ -1798,9 +1781,10 @@ PROTOBUF_NOINLINE void GetRequest::Clear() {
               total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
                   this_._internal_id());
             }
-            // bool force_refresh = 2;
-            if (this_._internal_force_refresh() != 0) {
-              total_size += 2;
+            // .memorymanager.DataType expected_type = 2;
+            if (this_._internal_expected_type() != 0) {
+              total_size += 1 +
+                            ::_pbi::WireFormatLite::EnumSize(this_._internal_expected_type());
             }
           }
           return this_.MaybeComputeUnknownFieldsSize(total_size,
@@ -1818,8 +1802,8 @@ void GetRequest::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::goog
   if (from._internal_id() != 0) {
     _this->_impl_.id_ = from._impl_.id_;
   }
-  if (from._internal_force_refresh() != 0) {
-    _this->_impl_.force_refresh_ = from._impl_.force_refresh_;
+  if (from._internal_expected_type() != 0) {
+    _this->_impl_.expected_type_ = from._impl_.expected_type_;
   }
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -1836,8 +1820,8 @@ void GetRequest::InternalSwap(GetRequest* PROTOBUF_RESTRICT other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(GetRequest, _impl_.force_refresh_)
-      + sizeof(GetRequest::_impl_.force_refresh_)
+      PROTOBUF_FIELD_OFFSET(GetRequest, _impl_.expected_type_)
+      + sizeof(GetRequest::_impl_.expected_type_)
       - PROTOBUF_FIELD_OFFSET(GetRequest, _impl_.id_)>(
           reinterpret_cast<char*>(&_impl_.id_),
           reinterpret_cast<char*>(&other->_impl_.id_));
@@ -1866,8 +1850,7 @@ GetResponse::GetResponse(::google::protobuf::Arena* arena)
 inline PROTOBUF_NDEBUG_INLINE GetResponse::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
     const Impl_& from, const ::memorymanager::GetResponse& from_msg)
-      : error_message_(arena, from.error_message_),
-        value_{},
+      : value_{},
         _cached_size_{0},
         _oneof_case_{from._oneof_case_[0]} {}
 
@@ -1884,15 +1867,15 @@ GetResponse::GetResponse(
   _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
-  _impl_.is_null_ = from._impl_.is_null_;
+  _impl_.type_ = from._impl_.type_;
   switch (value_case()) {
     case VALUE_NOT_SET:
       break;
-      case kRawData:
-        new (&_impl_.value_.raw_data_) decltype(_impl_.value_.raw_data_){arena, from._impl_.value_.raw_data_};
+      case kBinaryData:
+        new (&_impl_.value_.binary_data_) decltype(_impl_.value_.binary_data_){arena, from._impl_.value_.binary_data_};
         break;
-      case kStrValue:
-        new (&_impl_.value_.str_value_) decltype(_impl_.value_.str_value_){arena, from._impl_.value_.str_value_};
+      case kStrData:
+        new (&_impl_.value_.str_data_) decltype(_impl_.value_.str_data_){arena, from._impl_.value_.str_data_};
         break;
   }
 
@@ -1901,14 +1884,13 @@ GetResponse::GetResponse(
 inline PROTOBUF_NDEBUG_INLINE GetResponse::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility,
     ::google::protobuf::Arena* arena)
-      : error_message_(arena),
-        value_{},
+      : value_{},
         _cached_size_{0},
         _oneof_case_{} {}
 
 inline void GetResponse::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
-  _impl_.is_null_ = {};
+  _impl_.type_ = {};
 }
 GetResponse::~GetResponse() {
   // @@protoc_insertion_point(destructor:memorymanager.GetResponse)
@@ -1918,7 +1900,6 @@ inline void GetResponse::SharedDtor(MessageLite& self) {
   GetResponse& this_ = static_cast<GetResponse&>(self);
   this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   ABSL_DCHECK(this_.GetArena() == nullptr);
-  this_._impl_.error_message_.Destroy();
   if (this_.has_value()) {
     this_.clear_value();
   }
@@ -1929,12 +1910,12 @@ void GetResponse::clear_value() {
 // @@protoc_insertion_point(one_of_clear_start:memorymanager.GetResponse)
   ::google::protobuf::internal::TSanWrite(&_impl_);
   switch (value_case()) {
-    case kRawData: {
-      _impl_.value_.raw_data_.Destroy();
+    case kBinaryData: {
+      _impl_.value_.binary_data_.Destroy();
       break;
     }
-    case kStrValue: {
-      _impl_.value_.str_value_.Destroy();
+    case kStrData: {
+      _impl_.value_.str_data_.Destroy();
       break;
     }
     case VALUE_NOT_SET: {
@@ -1950,7 +1931,7 @@ inline void* GetResponse::PlacementNew_(const void*, void* mem,
   return ::new (mem) GetResponse(arena);
 }
 constexpr auto GetResponse::InternalNewImpl_() {
-  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(GetResponse),
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(GetResponse),
                                             alignof(GetResponse));
 }
 PROTOBUF_CONSTINIT
@@ -1981,15 +1962,15 @@ const ::google::protobuf::internal::ClassData* GetResponse::GetClassData() const
   return _class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<1, 4, 0, 56, 2> GetResponse::_table_ = {
+const ::_pbi::TcParseTable<0, 3, 0, 42, 2> GetResponse::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    4, 8,  // max_field_number, fast_idx_mask
+    3, 0,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967280,  // skipmap
+    4294967288,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    4,  // num_field_entries
+    3,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     _class_data_.base(),
@@ -1999,34 +1980,27 @@ const ::_pbi::TcParseTable<1, 4, 0, 56, 2> GetResponse::_table_ = {
     ::_pbi::TcParser::GetTable<::memorymanager::GetResponse>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // string error_message = 4;
-    {::_pbi::TcParser::FastUS1,
-     {34, 63, 0, PROTOBUF_FIELD_OFFSET(GetResponse, _impl_.error_message_)}},
-    // bool is_null = 3;
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(GetResponse, _impl_.is_null_), 63>(),
-     {24, 63, 0, PROTOBUF_FIELD_OFFSET(GetResponse, _impl_.is_null_)}},
+    // .memorymanager.DataType type = 1;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(GetResponse, _impl_.type_), 63>(),
+     {8, 63, 0, PROTOBUF_FIELD_OFFSET(GetResponse, _impl_.type_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // bytes raw_data = 1;
-    {PROTOBUF_FIELD_OFFSET(GetResponse, _impl_.value_.raw_data_), _Internal::kOneofCaseOffset + 0, 0,
+    // .memorymanager.DataType type = 1;
+    {PROTOBUF_FIELD_OFFSET(GetResponse, _impl_.type_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kOpenEnum)},
+    // bytes binary_data = 2;
+    {PROTOBUF_FIELD_OFFSET(GetResponse, _impl_.value_.binary_data_), _Internal::kOneofCaseOffset + 0, 0,
     (0 | ::_fl::kFcOneof | ::_fl::kBytes | ::_fl::kRepAString)},
-    // string str_value = 2;
-    {PROTOBUF_FIELD_OFFSET(GetResponse, _impl_.value_.str_value_), _Internal::kOneofCaseOffset + 0, 0,
+    // string str_data = 3;
+    {PROTOBUF_FIELD_OFFSET(GetResponse, _impl_.value_.str_data_), _Internal::kOneofCaseOffset + 0, 0,
     (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // bool is_null = 3;
-    {PROTOBUF_FIELD_OFFSET(GetResponse, _impl_.is_null_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kBool)},
-    // string error_message = 4;
-    {PROTOBUF_FIELD_OFFSET(GetResponse, _impl_.error_message_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   // no aux_entries
   {{
-    "\31\0\11\0\15\0\0\0"
+    "\31\0\0\10\0\0\0\0"
     "memorymanager.GetResponse"
-    "str_value"
-    "error_message"
+    "str_data"
   }},
 };
 
@@ -2037,8 +2011,7 @@ PROTOBUF_NOINLINE void GetResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  _impl_.error_message_.ClearToEmpty();
-  _impl_.is_null_ = false;
+  _impl_.type_ = 0;
   clear_value();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
@@ -2058,37 +2031,29 @@ PROTOBUF_NOINLINE void GetResponse::Clear() {
           ::uint32_t cached_has_bits = 0;
           (void)cached_has_bits;
 
+          // .memorymanager.DataType type = 1;
+          if (this_._internal_type() != 0) {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteEnumToArray(
+                1, this_._internal_type(), target);
+          }
+
           switch (this_.value_case()) {
-            case kRawData: {
-              const std::string& _s = this_._internal_raw_data();
-              target = stream->WriteBytesMaybeAliased(1, _s, target);
+            case kBinaryData: {
+              const std::string& _s = this_._internal_binary_data();
+              target = stream->WriteBytesMaybeAliased(2, _s, target);
               break;
             }
-            case kStrValue: {
-              const std::string& _s = this_._internal_str_value();
+            case kStrData: {
+              const std::string& _s = this_._internal_str_data();
               ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-                  _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "memorymanager.GetResponse.str_value");
-              target = stream->WriteStringMaybeAliased(2, _s, target);
+                  _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "memorymanager.GetResponse.str_data");
+              target = stream->WriteStringMaybeAliased(3, _s, target);
               break;
             }
             default:
               break;
           }
-          // bool is_null = 3;
-          if (this_._internal_is_null() != 0) {
-            target = stream->EnsureSpace(target);
-            target = ::_pbi::WireFormatLite::WriteBoolToArray(
-                3, this_._internal_is_null(), target);
-          }
-
-          // string error_message = 4;
-          if (!this_._internal_error_message().empty()) {
-            const std::string& _s = this_._internal_error_message();
-            ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "memorymanager.GetResponse.error_message");
-            target = stream->WriteStringMaybeAliased(4, _s, target);
-          }
-
           if (PROTOBUF_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
             target =
                 ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -2112,29 +2077,24 @@ PROTOBUF_NOINLINE void GetResponse::Clear() {
           // Prevent compiler warnings about cached_has_bits being unused
           (void)cached_has_bits;
 
-          ::_pbi::Prefetch5LinesFrom7Lines(&this_);
            {
-            // string error_message = 4;
-            if (!this_._internal_error_message().empty()) {
-              total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
-                                              this_._internal_error_message());
-            }
-            // bool is_null = 3;
-            if (this_._internal_is_null() != 0) {
-              total_size += 2;
+            // .memorymanager.DataType type = 1;
+            if (this_._internal_type() != 0) {
+              total_size += 1 +
+                            ::_pbi::WireFormatLite::EnumSize(this_._internal_type());
             }
           }
           switch (this_.value_case()) {
-            // bytes raw_data = 1;
-            case kRawData: {
+            // bytes binary_data = 2;
+            case kBinaryData: {
               total_size += 1 + ::google::protobuf::internal::WireFormatLite::BytesSize(
-                                              this_._internal_raw_data());
+                                              this_._internal_binary_data());
               break;
             }
-            // string str_value = 2;
-            case kStrValue: {
+            // string str_data = 3;
+            case kStrData: {
               total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
-                                              this_._internal_str_value());
+                                              this_._internal_str_data());
               break;
             }
             case VALUE_NOT_SET: {
@@ -2154,11 +2114,8 @@ void GetResponse::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::goo
   ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (!from._internal_error_message().empty()) {
-    _this->_internal_set_error_message(from._internal_error_message());
-  }
-  if (from._internal_is_null() != 0) {
-    _this->_impl_.is_null_ = from._impl_.is_null_;
+  if (from._internal_type() != 0) {
+    _this->_impl_.type_ = from._impl_.type_;
   }
   if (const uint32_t oneof_from_case = from._impl_._oneof_case_[0]) {
     const uint32_t oneof_to_case = _this->_impl_._oneof_case_[0];
@@ -2171,18 +2128,18 @@ void GetResponse::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::goo
     }
 
     switch (oneof_from_case) {
-      case kRawData: {
+      case kBinaryData: {
         if (oneof_needs_init) {
-          _this->_impl_.value_.raw_data_.InitDefault();
+          _this->_impl_.value_.binary_data_.InitDefault();
         }
-        _this->_impl_.value_.raw_data_.Set(from._internal_raw_data(), arena);
+        _this->_impl_.value_.binary_data_.Set(from._internal_binary_data(), arena);
         break;
       }
-      case kStrValue: {
+      case kStrData: {
         if (oneof_needs_init) {
-          _this->_impl_.value_.str_value_.InitDefault();
+          _this->_impl_.value_.str_data_.InitDefault();
         }
-        _this->_impl_.value_.str_value_.Set(from._internal_str_value(), arena);
+        _this->_impl_.value_.str_data_.Set(from._internal_str_data(), arena);
         break;
       }
       case VALUE_NOT_SET:
@@ -2202,11 +2159,8 @@ void GetResponse::CopyFrom(const GetResponse& from) {
 
 void GetResponse::InternalSwap(GetResponse* PROTOBUF_RESTRICT other) {
   using std::swap;
-  auto* arena = GetArena();
-  ABSL_DCHECK_EQ(arena, other->GetArena());
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.error_message_, &other->_impl_.error_message_, arena);
-        swap(_impl_.is_null_, other->_impl_.is_null_);
+  swap(_impl_.type_, other->_impl_.type_);
   swap(_impl_.value_, other->_impl_.value_);
   swap(_impl_._oneof_case_[0], other->_impl_._oneof_case_[0]);
 }
@@ -2436,49 +2390,19 @@ RefCountResponse::RefCountResponse(::google::protobuf::Arena* arena)
   SharedCtor(arena);
   // @@protoc_insertion_point(arena_constructor:memorymanager.RefCountResponse)
 }
-inline PROTOBUF_NDEBUG_INLINE RefCountResponse::Impl_::Impl_(
-    ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
-    const Impl_& from, const ::memorymanager::RefCountResponse& from_msg)
-      : error_message_(arena, from.error_message_),
-        _cached_size_{0} {}
-
 RefCountResponse::RefCountResponse(
-    ::google::protobuf::Arena* arena,
-    const RefCountResponse& from)
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-    : ::google::protobuf::Message(arena, _class_data_.base()) {
-#else   // PROTOBUF_CUSTOM_VTABLE
-    : ::google::protobuf::Message(arena) {
-#endif  // PROTOBUF_CUSTOM_VTABLE
-  RefCountResponse* const _this = this;
-  (void)_this;
-  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
-      from._internal_metadata_);
-  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
-  ::memcpy(reinterpret_cast<char *>(&_impl_) +
-               offsetof(Impl_, success_),
-           reinterpret_cast<const char *>(&from._impl_) +
-               offsetof(Impl_, success_),
-           offsetof(Impl_, ref_count_) -
-               offsetof(Impl_, success_) +
-               sizeof(Impl_::ref_count_));
-
-  // @@protoc_insertion_point(copy_constructor:memorymanager.RefCountResponse)
+    ::google::protobuf::Arena* arena, const RefCountResponse& from)
+    : RefCountResponse(arena) {
+  MergeFrom(from);
 }
 inline PROTOBUF_NDEBUG_INLINE RefCountResponse::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility,
     ::google::protobuf::Arena* arena)
-      : error_message_(arena),
-        _cached_size_{0} {}
+      : _cached_size_{0} {}
 
 inline void RefCountResponse::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
-  ::memset(reinterpret_cast<char *>(&_impl_) +
-               offsetof(Impl_, success_),
-           0,
-           offsetof(Impl_, ref_count_) -
-               offsetof(Impl_, success_) +
-               sizeof(Impl_::ref_count_));
+  _impl_.ref_count_ = {};
 }
 RefCountResponse::~RefCountResponse() {
   // @@protoc_insertion_point(destructor:memorymanager.RefCountResponse)
@@ -2488,7 +2412,6 @@ inline void RefCountResponse::SharedDtor(MessageLite& self) {
   RefCountResponse& this_ = static_cast<RefCountResponse&>(self);
   this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   ABSL_DCHECK(this_.GetArena() == nullptr);
-  this_._impl_.error_message_.Destroy();
   this_._impl_.~Impl_();
 }
 
@@ -2497,7 +2420,7 @@ inline void* RefCountResponse::PlacementNew_(const void*, void* mem,
   return ::new (mem) RefCountResponse(arena);
 }
 constexpr auto RefCountResponse::InternalNewImpl_() {
-  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(RefCountResponse),
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(RefCountResponse),
                                             alignof(RefCountResponse));
 }
 PROTOBUF_CONSTINIT
@@ -2528,15 +2451,15 @@ const ::google::protobuf::internal::ClassData* RefCountResponse::GetClassData() 
   return _class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<2, 3, 0, 52, 2> RefCountResponse::_table_ = {
+const ::_pbi::TcParseTable<0, 1, 0, 0, 2> RefCountResponse::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    3, 24,  // max_field_number, fast_idx_mask
+    1, 0,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967288,  // skipmap
+    4294967294,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    3,  // num_field_entries
+    1,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     _class_data_.base(),
@@ -2546,34 +2469,18 @@ const ::_pbi::TcParseTable<2, 3, 0, 52, 2> RefCountResponse::_table_ = {
     ::_pbi::TcParser::GetTable<::memorymanager::RefCountResponse>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    {::_pbi::TcParser::MiniParse, {}},
-    // bool success = 1;
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(RefCountResponse, _impl_.success_), 63>(),
-     {8, 63, 0, PROTOBUF_FIELD_OFFSET(RefCountResponse, _impl_.success_)}},
-    // string error_message = 2;
-    {::_pbi::TcParser::FastUS1,
-     {18, 63, 0, PROTOBUF_FIELD_OFFSET(RefCountResponse, _impl_.error_message_)}},
-    // int32 ref_count = 3;
+    // int32 ref_count = 1;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(RefCountResponse, _impl_.ref_count_), 63>(),
-     {24, 63, 0, PROTOBUF_FIELD_OFFSET(RefCountResponse, _impl_.ref_count_)}},
+     {8, 63, 0, PROTOBUF_FIELD_OFFSET(RefCountResponse, _impl_.ref_count_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // bool success = 1;
-    {PROTOBUF_FIELD_OFFSET(RefCountResponse, _impl_.success_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kBool)},
-    // string error_message = 2;
-    {PROTOBUF_FIELD_OFFSET(RefCountResponse, _impl_.error_message_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // int32 ref_count = 3;
+    // int32 ref_count = 1;
     {PROTOBUF_FIELD_OFFSET(RefCountResponse, _impl_.ref_count_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
   }},
   // no aux_entries
   {{
-    "\36\0\15\0\0\0\0\0"
-    "memorymanager.RefCountResponse"
-    "error_message"
   }},
 };
 
@@ -2584,10 +2491,7 @@ PROTOBUF_NOINLINE void RefCountResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  _impl_.error_message_.ClearToEmpty();
-  ::memset(&_impl_.success_, 0, static_cast<::size_t>(
-      reinterpret_cast<char*>(&_impl_.ref_count_) -
-      reinterpret_cast<char*>(&_impl_.success_)) + sizeof(_impl_.ref_count_));
+  _impl_.ref_count_ = 0;
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
@@ -2606,25 +2510,10 @@ PROTOBUF_NOINLINE void RefCountResponse::Clear() {
           ::uint32_t cached_has_bits = 0;
           (void)cached_has_bits;
 
-          // bool success = 1;
-          if (this_._internal_success() != 0) {
-            target = stream->EnsureSpace(target);
-            target = ::_pbi::WireFormatLite::WriteBoolToArray(
-                1, this_._internal_success(), target);
-          }
-
-          // string error_message = 2;
-          if (!this_._internal_error_message().empty()) {
-            const std::string& _s = this_._internal_error_message();
-            ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "memorymanager.RefCountResponse.error_message");
-            target = stream->WriteStringMaybeAliased(2, _s, target);
-          }
-
-          // int32 ref_count = 3;
+          // int32 ref_count = 1;
           if (this_._internal_ref_count() != 0) {
             target = ::google::protobuf::internal::WireFormatLite::
-                WriteInt32ToArrayWithField<3>(
+                WriteInt32ToArrayWithField<1>(
                     stream, this_._internal_ref_count(), target);
           }
 
@@ -2651,18 +2540,8 @@ PROTOBUF_NOINLINE void RefCountResponse::Clear() {
           // Prevent compiler warnings about cached_has_bits being unused
           (void)cached_has_bits;
 
-          ::_pbi::Prefetch5LinesFrom7Lines(&this_);
            {
-            // string error_message = 2;
-            if (!this_._internal_error_message().empty()) {
-              total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
-                                              this_._internal_error_message());
-            }
-            // bool success = 1;
-            if (this_._internal_success() != 0) {
-              total_size += 2;
-            }
-            // int32 ref_count = 3;
+            // int32 ref_count = 1;
             if (this_._internal_ref_count() != 0) {
               total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
                   this_._internal_ref_count());
@@ -2680,12 +2559,6 @@ void RefCountResponse::MergeImpl(::google::protobuf::MessageLite& to_msg, const 
   ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (!from._internal_error_message().empty()) {
-    _this->_internal_set_error_message(from._internal_error_message());
-  }
-  if (from._internal_success() != 0) {
-    _this->_impl_.success_ = from._impl_.success_;
-  }
   if (from._internal_ref_count() != 0) {
     _this->_impl_.ref_count_ = from._impl_.ref_count_;
   }
@@ -2702,16 +2575,8 @@ void RefCountResponse::CopyFrom(const RefCountResponse& from) {
 
 void RefCountResponse::InternalSwap(RefCountResponse* PROTOBUF_RESTRICT other) {
   using std::swap;
-  auto* arena = GetArena();
-  ABSL_DCHECK_EQ(arena, other->GetArena());
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.error_message_, &other->_impl_.error_message_, arena);
-  ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(RefCountResponse, _impl_.ref_count_)
-      + sizeof(RefCountResponse::_impl_.ref_count_)
-      - PROTOBUF_FIELD_OFFSET(RefCountResponse, _impl_.success_)>(
-          reinterpret_cast<char*>(&_impl_.success_),
-          reinterpret_cast<char*>(&other->_impl_.success_));
+        swap(_impl_.ref_count_, other->_impl_.ref_count_);
 }
 
 ::google::protobuf::Metadata RefCountResponse::GetMetadata() const {
