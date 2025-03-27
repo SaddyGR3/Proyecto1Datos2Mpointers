@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package memorymanager;
+
+service MemoryManager {
+    rpc Create(CreateRequest) returns (CreateResponse);
+    rpc Set(SetRequest) returns (SetResponse);
+    rpc Get(GetRequest) returns (GetResponse);
+    rpc IncreaseRefCount(RefCountRequest) returns (RefCountResponse);
+    rpc DecreaseRefCount(RefCountRequest) returns (RefCountResponse);
+}
+
+enum DataType {
+    UNDEFINED = 0;  // Tipo por defecto para manejar errores
+    INT32 = 1;
+    FLOAT32 = 2;
+    FLOAT64 = 3;
+    CHAR = 4;
+    STRING = 5;
+    BOOL = 6;
+}
+
+message CreateRequest {
+    uint32 size = 1;
+    DataType type = 2;
+    bool initialize_with_zero = 3;  // Opcional: inicializar memoria con ceros
+}
+
+message CreateResponse {
+    int32 id = 1;
+    uint32 actual_size = 2;
+    DataType actual_type = 3;  // Confirmación del tipo creado
+}
+
+message SetRequest {
+    int32 id = 1;
+    oneof value {
+        bytes raw_data = 2;    // Para tipos binarios (numéricos, char, bool)
+        string str_value = 3;  // Solo para strings
+    }
+    DataType data_type = 4;   // Tipo explícito para validación
+}
+
+message SetResponse {
+    bool success = 1;
+    string error_message = 2;
+    uint32 bytes_written = 3;
+    DataType stored_type = 4; // Confirmación del tipo almacenado
+}
+
+message GetRequest {
+    int32 id = 1;
+    bool force_refresh = 2;
+    DataType expected_type = 3; // Tipo esperado para validación
+}
+
+message GetResponse {
+    oneof value {
+        bytes raw_data = 1;    // Datos binarios para tipos numéricos
+        string str_value = 2;  // Solo para strings
+    }
+    DataType type = 3;
+    bool is_null = 4;
+    uint32 data_size = 5;      // Tamaño real de los datos
+}
+
+message RefCountRequest {
+    int32 id = 1;
+}
+
+message RefCountResponse {
+    bool success = 1;
+    string error_message = 2;
+    int32 ref_count = 3;
+    DataType block_type = 4;   // Tipo del bloque referenciado
+}
