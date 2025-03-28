@@ -141,15 +141,16 @@ public:
             if ((request->expected_type() == DataType::STRING && blockType != "string") ||
                 (request->expected_type() != DataType::STRING && blockType == "string")) {
                 throw std::runtime_error("Type mismatch");
-            }
+                }
 
             response->set_type(request->expected_type());
 
             if (blockType == "string") {
                 std::string value = memManager.getValue<std::string>(request->id());
-                response->set_str_data(value);
+                // Forzar el string como datos binarios para evitar validación UTF-8
+                response->set_binary_data(value);  // <-- Cambio clave aquí
             } else {
-                // Manejar tipos binarios
+                // Manejar tipos binarios (existente)
                 std::string binary_data;
                 binary_data.resize(blockType == "int" ? sizeof(int32_t) :
                                  blockType == "float" ? sizeof(float) : sizeof(char));

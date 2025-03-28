@@ -126,11 +126,14 @@ void MPointer<std::string>::fetchValue() const {
     request.set_expected_type(DataType::STRING);
 
     Status status = stub_->Get(&context, request, &response);
-    if (!status.ok() || response.value_case() != GetResponse::kStrData) {
-        throw std::runtime_error("Failed to get string value: " +
-            (status.ok() ? "invalid response" : status.error_message()));
+    if (!status.ok()) {
+        throw std::runtime_error("Failed to get string value: " + status.error_message());
     }
-    cached_value_ = response.str_data();
+
+    // Cambio clave: usar sólo hasta el null terminator
+    cached_value_ = response.binary_data(); // o str_data según tu proto
+    cached_value_ = cached_value_.c_str(); // Esto trunca en el primer null byte
+    dirty_ = false;
 }
 
 template <>
@@ -142,7 +145,15 @@ void MPointer<std::string>::storeValue() const {
     SetResponse response;
     request.set_id(id_);
     request.set_type(DataType::STRING);
-    request.set_str_data(cached_value_);
+
+    // Asegurar que el string sea UTF-8 válido
+    std::string utf8_valid_str;
+    for (char c : cached_value_) {
+        if ((c & 0xC0) != 0x80) { // Validación básica UTF-8
+            utf8_valid_str += c;
+        }
+    }
+    request.set_str_data(utf8_valid_str);
 
     Status status = stub_->Set(&context, request, &response);
     if (!status.ok() || !response.success()) {

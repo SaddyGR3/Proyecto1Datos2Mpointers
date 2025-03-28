@@ -35,7 +35,12 @@ public:
     std::string getStringValue() const {
         if (!address) throw std::runtime_error("Attempt to read from NULL memory");
         if (type != "string") throw std::runtime_error("Not a string block");
-        return std::string(static_cast<const char*>(address), size);
+
+        // Cambio clave: usar strnlen para encontrar el null terminator
+        const char* str = static_cast<const char*>(address);
+        size_t actual_length = strnlen(str, size); // No leerá más allá del null terminator
+
+        return std::string(str, actual_length);
     }
 
     // Método genérico para asignar valores POD
@@ -54,8 +59,11 @@ public:
     void setStringValue(const std::string& value) {
         if (!address) throw std::runtime_error("Attempt to write to NULL memory");
         if (type != "string") throw std::runtime_error("Not a string block");
-        if (value.size() > size) throw std::runtime_error("String size exceeds block size");
+        if (value.size() >= size) throw std::runtime_error("String size exceeds block size");
+
+        // Cambio clave: copiar el string y agregar null terminator explícito
         std::memcpy(address, value.data(), value.size());
+        static_cast<char*>(address)[value.size()] = '\0'; // Asegurar null terminator
     }
 
 private:

@@ -92,4 +92,6 @@ void MPointer<std::string>::fetchValue() const;
 template <>
 void MPointer<std::string>::storeValue() const;
 
+
+
 #endif // MPOINTERS_H
