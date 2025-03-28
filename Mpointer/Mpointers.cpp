@@ -14,7 +14,7 @@ void MPointerBase::Init(const std::string& server_address) {
 
     auto deadline = std::chrono::system_clock::now() + std::chrono::seconds(2);
     if (!channel->WaitForConnected(deadline)) {
-        throw std::runtime_error("Failed to connect to MemoryManager");
+        throw std::runtime_error("Fallo en conectarse a Memorymanager");
     }
 }
 
@@ -30,7 +30,7 @@ MPointer<T> MPointer<T>::New(size_t size) {
 
     Status status = stub_->Create(&context, request, &response);
     if (!status.ok()) {
-        throw std::runtime_error("Create failed: " + status.error_message());
+        throw std::runtime_error("Creacion fallida: " + status.error_message());
     }
 
     return MPointer<T>(response.id());
@@ -71,20 +71,20 @@ void MPointer<T>::fetchValue() const {
 
     Status status = stub_->Get(&context, request, &response);
     if (!status.ok()) {
-        throw std::runtime_error("Failed to get value: " + status.error_message());
+        throw std::runtime_error("Fallo en obtener valor: " + status.error_message());
     }
 
     if constexpr (std::is_same_v<T, std::string>) {
         if (response.value_case() != GetResponse::kStrData) {
-            throw std::runtime_error("Expected string value not received");
+            throw std::runtime_error("El valor de string esperado no se recibio");
         }
         cached_value_ = response.str_data();
     } else {
         if (response.value_case() != GetResponse::kBinaryData) {
-            throw std::runtime_error("Expected binary data not received");
+            throw std::runtime_error("Datos binarios esperados no se recibieron");
         }
         if (response.binary_data().size() != sizeof(T)) {
-            throw std::runtime_error("Invalid data size received");
+            throw std::runtime_error("tamaño de dato recibido es invalido");
         }
         // Copia segura del valor binario
         memcpy(&cached_value_, response.binary_data().data(), sizeof(T));
@@ -109,7 +109,7 @@ void MPointer<T>::storeValue() const {
 
     Status status = stub_->Set(&context, request, &response);
     if (!status.ok() || !response.success()) {
-        throw std::runtime_error("Failed to set value: " +
+        throw std::runtime_error("Fallo en asignar valor: " +
             (status.ok() ? response.error_message() : status.error_message()));
     }
     dirty_ = false;
@@ -127,7 +127,7 @@ void MPointer<std::string>::fetchValue() const {
 
     Status status = stub_->Get(&context, request, &response);
     if (!status.ok()) {
-        throw std::runtime_error("Failed to get string value: " + status.error_message());
+        throw std::runtime_error("Fallo en obtener valor de string: " + status.error_message());
     }
 
     // Cambio clave: usar sólo hasta el null terminator
@@ -157,7 +157,7 @@ void MPointer<std::string>::storeValue() const {
 
     Status status = stub_->Set(&context, request, &response);
     if (!status.ok() || !response.success()) {
-        throw std::runtime_error("Failed to set string value: " +
+        throw std::runtime_error("Fallo en asignar valor a string: " +
             (status.ok() ? response.error_message() : status.error_message()));
     }
     dirty_ = false;
@@ -172,7 +172,7 @@ void MPointer<T>::increaseRefCount() {
 
     Status status = stub_->IncreaseRefCount(&context, request, &response);
     if (!status.ok()) {
-        throw std::runtime_error("IncreaseRefCount failed: " + status.error_message());
+        throw std::runtime_error("IncreaseRefCount fallido: " + status.error_message());
     }
 }
 
@@ -185,7 +185,7 @@ void MPointer<T>::decreaseRefCount() {
 
     Status status = stub_->DecreaseRefCount(&context, request, &response);
     if (!status.ok()) {
-        std::cerr << "Warning: DecreaseRefCount failed: " << status.error_message() << std::endl;
+        std::cerr << "Peligro: DecreaseRefCount fallido: " << status.error_message() << std::endl;
     }
 }
 
@@ -216,7 +216,7 @@ MPointer<T>& MPointer<T>::operator=(MPointer<T>&& other) noexcept {
 
 template <typename T>
 MPointer<T>& MPointer<T>::operator=(const T& value) {
-    if (id_ == -1) throw std::runtime_error("Assigning to null MPointer");
+    if (id_ == -1) throw std::runtime_error("Asignando a puntero NULL");
     cached_value_ = value;
     dirty_ = true;
     storeValue();
@@ -225,7 +225,7 @@ MPointer<T>& MPointer<T>::operator=(const T& value) {
 
 template <typename T>
 T& MPointer<T>::operator*() {
-    if (id_ == -1) throw std::runtime_error("Dereferencing null MPointer");
+    if (id_ == -1) throw std::runtime_error("Desreferenciando Mpointer NULL");
     fetchValue();
     dirty_ = true;
     return cached_value_;
@@ -233,7 +233,7 @@ T& MPointer<T>::operator*() {
 
 template <typename T>
 const T& MPointer<T>::operator*() const {
-    if (id_ == -1) throw std::runtime_error("Dereferencing null MPointer");
+    if (id_ == -1) throw std::runtime_error("Desreferenciando Mpointer NULL");
     fetchValue();
     return cached_value_;
 }

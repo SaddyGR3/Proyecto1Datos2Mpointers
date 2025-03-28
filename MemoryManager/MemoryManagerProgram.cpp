@@ -20,11 +20,11 @@ public:
     template <typename T>
     typename std::enable_if<std::is_pod<T>::value, T>::type
     getValue() const {
-        if (!address) throw std::runtime_error("Attempt to read from NULL memory");
+        if (!address) throw std::runtime_error("Intento de leer memoria NULL");
         if (!isTypeValid<T>()) {
-            throw std::runtime_error("Incorrect data type for this block");
+            throw std::runtime_error("Tipo de dato incorrecto para este bloque");
         }
-        if (sizeof(T) > size) throw std::runtime_error("Data size exceeds block size");
+        if (sizeof(T) > size) throw std::runtime_error("Tamaño del dato excede el tamaño del bloque");
 
         T value;
         std::memcpy(&value, address, sizeof(T));
@@ -33,8 +33,8 @@ public:
 
     // Método para strings (versión const)
     std::string getStringValue() const {
-        if (!address) throw std::runtime_error("Attempt to read from NULL memory");
-        if (type != "string") throw std::runtime_error("Not a string block");
+        if (!address) throw std::runtime_error("Intento de leer memoria NULL");
+        if (type != "string") throw std::runtime_error("No es un bloque de string");
 
         // Cambio clave: usar strnlen para encontrar el null terminator
         const char* str = static_cast<const char*>(address);
@@ -47,19 +47,19 @@ public:
     template <typename T>
     typename std::enable_if<std::is_pod<T>::value>::type
     setValue(const T& value) {
-        if (!address) throw std::runtime_error("Attempt to write to NULL memory");
+        if (!address) throw std::runtime_error("Intento de escribir en memoria NULL");
         if (!isTypeValid<T>()) {
-            throw std::runtime_error("Incorrect data type for this block");
+            throw std::runtime_error("Tipo de dato incorrecto para este bloque");
         }
-        if (sizeof(T) > size) throw std::runtime_error("Data size exceeds block size");
+        if (sizeof(T) > size) throw std::runtime_error("Tamaño del dato excede el tamaño del bloque");
         std::memcpy(address, &value, sizeof(T));
     }
 
     // Método para asignar strings
     void setStringValue(const std::string& value) {
-        if (!address) throw std::runtime_error("Attempt to write to NULL memory");
-        if (type != "string") throw std::runtime_error("Not a string block");
-        if (value.size() >= size) throw std::runtime_error("String size exceeds block size");
+        if (!address) throw std::runtime_error("Intento de escribir en memoria NULL");
+        if (type != "string") throw std::runtime_error("No es un bloque de string");
+        if (value.size() >= size) throw std::runtime_error("Tamaño del string excede el tamaño del bloque");
 
         // Cambio clave: copiar el string y agregar null terminator explícito
         std::memcpy(address, value.data(), value.size());
@@ -122,7 +122,7 @@ public:
         // Verificar tamaño mínimo según el tipo
         size_t minSize = getMinSizeForType(type);
         if (size < minSize) {
-            throw std::runtime_error("Size too small for type " + type);
+            throw std::runtime_error("Tamaño muy pequeño para el tipo " + type);
         }
 
         void* addr = findFreeSpace(size);
@@ -143,7 +143,7 @@ public:
                 return block.type;
             }
         }
-        throw std::runtime_error("ID not found");
+        throw std::runtime_error("ID no encontrado");
     }
 
     // Obtiene la dirección de un bloque (versión const)
@@ -153,7 +153,7 @@ public:
                 return block.block.address;
             }
         }
-        throw std::runtime_error("ID not found");
+        throw std::runtime_error("ID no encontrado");
     }
 
     // Obtiene el tamaño de un bloque (versión const)
@@ -163,7 +163,7 @@ public:
                 return block.size;
             }
         }
-        throw std::runtime_error("ID not found");
+        throw std::runtime_error("ID no encontrado");
     }
 
     // Asigna un valor a un bloque
@@ -173,12 +173,12 @@ public:
             if (block.id == id) {
                 if constexpr (std::is_same_v<T, std::string>) {
                     if (block.type != "string") {
-                        throw std::runtime_error("Block is not string type");
+                        throw std::runtime_error("El bloque no es de tipo string");
                     }
                     block.block.setStringValue(value);
                 } else {
                     if (!std::is_pod_v<T>) {
-                        throw std::runtime_error("Only POD types and strings are supported");
+                        throw std::runtime_error("Solo soporta tipos string y pod");
                     }
                     block.block.setValue(value);
                 }
@@ -186,7 +186,7 @@ public:
                 return;
             }
         }
-        throw std::runtime_error("ID not found");
+        throw std::runtime_error("ID no encontrado");
     }
 
     // Obtiene un valor de un bloque (versión const)
@@ -195,22 +195,22 @@ public:
         for (const auto& block : memoryTable) {
             if (block.id == id) {
                 if (!block.initialized) {
-                    throw std::runtime_error("Attempt to read uninitialized block");
+                    throw std::runtime_error("Intento de leer bloque in inicializar");
                 }
                 if constexpr (std::is_same_v<T, std::string>) {
                     if (block.type != "string") {
-                        throw std::runtime_error("Block is not string type");
+                        throw std::runtime_error("el bloque no es de tipo string");
                     }
                     return block.block.getStringValue();
                 } else {
                     if (!std::is_pod_v<T>) {
-                        throw std::runtime_error("Only POD types and strings are supported");
+                        throw std::runtime_error("Solo soporta tipos string y pod");
                     }
                     return block.block.getValue<T>();
                 }
             }
         }
-        throw std::runtime_error("ID not found");
+        throw std::runtime_error("ID no encontrado");
     }
 
     // Incrementa el contador de referencias
@@ -220,7 +220,7 @@ public:
                 return ++block.refcount;
             }
         }
-        throw std::runtime_error("ID not found");
+        throw std::runtime_error("ID no encontrado");
     }
 
     // Decrementa el contador de referencias
@@ -234,7 +234,7 @@ public:
                 return block.refcount;
             }
         }
-        throw std::runtime_error("ID not found");
+        throw std::runtime_error("ID no encontrado");
     }
 
     // Compacta la memoria
