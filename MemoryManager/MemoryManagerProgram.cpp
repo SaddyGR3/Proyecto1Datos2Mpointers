@@ -13,6 +13,7 @@ public:
     size_t size;
     std::string type;
 
+
     MemoryBlock(void* address, size_t size, std::string type = "int")
         : address(address), size(size), type(type) {}
 
@@ -92,14 +93,16 @@ public:
     MemoryBlock block;
     bool initialized;
 
+
     MemoryMap(int id, size_t size, void* address, std::string type = "int")
-        : block(address, size, type), id(id), size(size), type(type), refcount(1), initialized(false) {}
+        : block(address, size, type), id(id), size(size), type(type), refcount(1), initialized(true) {}
 };
 
 class MemoryManagerProgram {
     size_t totalMemory;
     std::vector<MemoryMap> memoryTable;
     char* memory;
+    
 
 public:
     MemoryManagerProgram(size_t sizeMB) {
@@ -114,6 +117,46 @@ public:
     ~MemoryManagerProgram() {
         std::free(memory);
     }
+    void generateDump(const std::string& operation) {
+        std::lock_guard<std::mutex> lock(dumpMutex);
+        auto now = std::chrono::system_clock::now();
+        auto in_time_t = std::chrono::system_clock::to_time_t(now);
+
+        std::stringstream filename;
+        filename << dumpFolder << "/dump_"
+                << std::put_time(std::localtime(&in_time_t), "%Y%m%d_%H%M%S")
+                << "_" << operation << ".txt";
+
+        std::ofstream dumpFile(filename.str());
+        if (!dumpFile.is_open()) {
+            std::cerr << "Error al crear archivo dump: " << filename.str() << std::endl;
+            return;
+        }
+
+        // Escribir estado actual de la memoria
+        dumpFile << "=== Memory Dump ===\n";
+        dumpFile << "Operation: " << operation << "\n";
+        dumpFile << "Timestamp: " << std::put_time(std::localtime(&in_time_t), "%c") << "\n";
+        dumpFile << "Total Memory: " << (totalMemory / (1024 * 1024)) << " MB\n";
+        dumpFile << "Memory Blocks:\n";
+
+        for (const auto& block : memoryTable) {
+            dumpFile << "  ID: " << block.id
+                    << " | Type: " << block.type
+                    << " | Size: " << block.size << " bytes"
+                    << " | Refs: " << block.refcount
+                    << " | Addr: " << block.block.address << "\n";
+        }
+
+        dumpFile << "Free Blocks:\n";
+        for (const auto& freeBlock : freeList) {
+            dumpFile << "  Addr: " << freeBlock.address
+                    << " | Size: " << freeBlock.size << " bytes\n";
+        }
+
+        dumpFile.close();
+    }
+
 
     // Asigna memoria para un tipo específico
     int allocate(size_t size, std::string type = "int") {

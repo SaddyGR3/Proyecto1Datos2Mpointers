@@ -1,6 +1,9 @@
+
 #include "MPointers.h"
+#include "LinkedList.h"
 #include <stdexcept>
 #include <chrono>
+
 
 // Definir el stub compartido
 std::shared_ptr<MemoryManager::Stub> MPointerBase::stub_ = nullptr;

@@ -5,6 +5,7 @@
 #include "memory_manager.grpc.pb.h"
 #include <memory>
 #include <string>
+
 #include <typeinfo>
 #include <cstring>
 #include <type_traits>
@@ -23,6 +24,8 @@ using memorymanager::RefCountRequest;
 using memorymanager::RefCountResponse;
 using memorymanager::DataType;
 
+
+
 class MPointerBase {
 protected:
     static std::shared_ptr<MemoryManager::Stub> stub_;  // Mover el stub a la clase base
@@ -30,6 +33,7 @@ public:
     static void Init(const std::string& server_address);  // Mover Init a la clase base
     virtual ~MPointerBase() = default;
     virtual int getId() const = 0;
+    virtual void setId(int id) = 0;  // AÑADIDO: Método virtual puro para asignar ID
 };
 
 template <typename T>
@@ -84,6 +88,27 @@ public:
 
     explicit operator bool() const { return id_ != -1; }
     int getId() const override { return id_; }
+
+    // AÑADIDOS: Los dos métodos necesarios para la lista enlazada
+    void setId(int id) {
+        if (id_ != id) {
+            if (id_ != -1) decreaseRefCount();
+            id_ = id;
+            if (id_ != -1) {
+                increaseRefCount();
+                fetchValue();
+            }
+        }
+    }
+
+    void reset() {
+        if (id_ != -1) {
+            decreaseRefCount();
+            id_ = -1;
+            cached_value_ = T();
+            dirty_ = false;
+        }
+    }
 };
 
 // Declaración de especializaciones
@@ -91,7 +116,10 @@ template <>
 void MPointer<std::string>::fetchValue() const;
 template <>
 void MPointer<std::string>::storeValue() const;
-
+template class MPointer<int>;
+template class MPointer<float>;
+template class MPointer<char>;
+template class MPointer<std::string>;
 
 
 #endif // MPOINTERS_H

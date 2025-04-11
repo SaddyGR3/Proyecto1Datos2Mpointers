@@ -39,7 +39,10 @@ target_link_libraries(memory_manager_server PRIVATE gRPC::grpc++ protobuf::libpr
 # linked_list executable (simplificado)
 add_executable(linked_list
         LinkedList/LinkedList.cpp
+        LinkedList/main.cpp
+        LinkedList/Elemento.h
         Mpointer/MPointers.cpp
+        Mpointer/MPointers.h
         generated/memory_manager.pb.cc
         generated/memory_manager.grpc.pb.cc
 )
