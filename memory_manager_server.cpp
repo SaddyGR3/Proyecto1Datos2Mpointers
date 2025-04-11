@@ -4,6 +4,8 @@
 #include <iomanip>
 #include <memory>
 #include <string>
+#include <fstream>
+#include <mutex>
 #include <grpcpp/grpcpp.h>
 #include "generated/memory_manager.grpc.pb.h"
 #include "MemoryManagerProgram.cpp"
@@ -30,15 +32,88 @@ class MemoryManagerServiceImpl final : public MemoryManager::Service {
 private:
     MemoryManagerProgram& memManager;
     const std::string& dumpFolder;
+    std::ofstream dumpFile;
+    std::mutex dumpMutex;
+    std::string dumpFileName;
 
-    // Función helper para imprimir logs (sin fecha/hora)
+    // Función helper para obtener el timestamp actual
+    std::string getCurrentTimestamp() {
+        auto now = std::chrono::system_clock::now();
+        auto in_time_t = std::chrono::system_clock::to_time_t(now);
+
+        std::stringstream ss;
+        ss << std::put_time(std::localtime(&in_time_t), "%Y%m%d_%H%M%S");
+        return ss.str();
+    }
+
+    // Función helper para imprimir logs y escribir en dump
     void logOperation(const std::string& operation, const std::string& details) {
-        std::cout << operation << " - " << details << std::endl;
+        auto now = std::chrono::system_clock::now();
+        auto in_time_t = std::chrono::system_clock::to_time_t(now);
+
+        std::stringstream logLine;
+        logLine << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d %H:%M:%S")
+                << " | " << operation << " | " << details;
+
+        // Escribir en consola
+        std::cout << logLine.str() << std::endl;
+
+        // Escribir en archivo de dump (con mutex para thread safety)
+        std::lock_guard<std::mutex> lock(dumpMutex);
+        if (dumpFile.is_open()) {
+            dumpFile << logLine.str() << std::endl;
+            dumpFile.flush(); // Forzar escritura inmediata
+        } else {
+            std::cerr << "Warning: Intento de escribir en dump file cerrado: " << operation << std::endl;
+        }
+    }
+
+    void initDumpFile() {
+        try {
+            // Verificar que la carpeta existe y es accesible
+            if (!fs::exists(dumpFolder)) {
+                std::cerr << "Error: La carpeta de dump no existe: " << dumpFolder << std::endl;
+                return;
+            }
+
+            // Verificar permisos de escritura
+            if (!fs::is_directory(dumpFolder)) {
+                std::cerr << "Error: La ruta de dump no es una carpeta: " << dumpFolder << std::endl;
+                return;
+            }
+
+            // Crear nombre de archivo con timestamp
+            dumpFileName = dumpFolder + "/dump_" + getCurrentTimestamp() + ".log";
+
+            // Abrir archivo en modo append (por si acaso)
+            dumpFile.open(dumpFileName, std::ios::out | std::ios::app);
+
+            if (!dumpFile.is_open()) {
+                std::cerr << "Error: No se pudo abrir el archivo de dump: " << dumpFileName << std::endl;
+                std::cerr << "Ruta absoluta: " << fs::absolute(dumpFileName) << std::endl;
+            } else {
+                std::cout << "Archivo de dump creado exitosamente: " << fs::absolute(dumpFileName) << std::endl;
+                logOperation("SERVER START", "Iniciando servidor - Dump file: " + dumpFileName);
+            }
+        } catch (const fs::filesystem_error& e) {
+            std::cerr << "Filesystem error: " << e.what() << std::endl;
+        } catch (const std::exception& e) {
+            std::cerr << "Error general: " << e.what() << std::endl;
+        }
     }
 
 public:
     explicit MemoryManagerServiceImpl(MemoryManagerProgram& manager, const std::string& folder)
-        : memManager(manager), dumpFolder(folder) {}
+        : memManager(manager), dumpFolder(folder) {
+        initDumpFile();
+    }
+
+    ~MemoryManagerServiceImpl() {
+        if (dumpFile.is_open()) {
+            logOperation("SERVER STOP", "Cerrando servidor");
+            dumpFile.close();
+        }
+    }
 
     Status Create(ServerContext* context, const CreateRequest* request, CreateResponse* response) override {
         try {
@@ -256,7 +331,7 @@ public:
 
 void RunServer(int port, size_t memSizeMB, const std::string& dumpFolder) {
     std::string server_address = "0.0.0.0:" + std::to_string(port);
-    MemoryManagerProgram memManager(memSizeMB);  //(memSizeMB, dumpFolder); cuando se implemente el dump
+    MemoryManagerProgram memManager(memSizeMB);
     MemoryManagerServiceImpl service(memManager, dumpFolder);
 
     ServerBuilder builder;
